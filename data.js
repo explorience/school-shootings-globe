@@ -452,12 +452,42 @@ const INCIDENTS = [
   {"id":"ca-002","date":"2026-02-10","name":"Tumbler Ridge Secondary School","location":"Tumbler Ridge, British Columbia","lat":55.1238,"lng":-121.0016,"country":"Canada","killed":8,"injured":27,"type":"High School","perp":{"name":"Jesse Van Rootselaar","age":18,"gender":"Male","race":"White","cisTrans":"Cisgender"},"note":"Deadliest school shooting in Canada since 1989. Killed 2 relatives at home, then 5 students and 1 education assistant at school."}
 ];
 
-// Export for Node.js
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { INCIDENTS };
-}
+// US population demographics (2020 Census + Pew Research)
+const US_POPULATION = {
+  total: 331449281,
+  byRace: {
+    "White": { pop: 204277273, pct: 61.6 },
+    "Black": { pop: 41104200, pct: 12.4 },
+    "Latino": { pop: 62080044, pct: 18.7 },
+    "Asian": { pop: 19886049, pct: 6.0 },
+    "Native American": { pop: 3727135, pct: 1.1 },
+    "Mixed": { pop: 5374252, pct: 1.6 },
+    "Other": { pop: 1000328, pct: 0.3 }
+  },
+  byGender: {
+    "Male": { pop: 162826299, pct: 49.1 },
+    "Female": { pop: 168622982, pct: 50.9 },
+    "Transgender Male": { pop: 1657247, pct: 0.5 }
+  },
+  byTransStatus: {
+    "Cisgender": { pop: 326147788, pct: 98.4 },
+    "Transgender": { pop: 5301493, pct: 1.6 }
+  }
+};
 
-// For browser use
-if (typeof window !== 'undefined') {
-  window.INCIDENTS = INCIDENTS;
-}
+const COUNTRY_COUNTS = {
+  "US": { shootings: 428, population: 331449281, label:"United States" },
+  "Canada": { shootings: 3, population: 37742154, label:"Canada" },
+  "Germany": { shootings: 3, population: 83783942, label:"Germany" },
+  "Russia": { shootings: 5, population: 145934462, label:"Russia" },
+  "Finland": { shootings: 2, population: 5540720, label:"Finland" },
+  "UK": { shootings: 1, population: 67886011, label:"United Kingdom" },
+  "Norway": { shootings: 1, population: 5421241, label:"Norway" },
+  "Pakistan": { shootings: 1, population: 220892340, label:"Pakistan" },
+  "Kenya": { shootings: 1, population: 53771296, label:"Kenya" },
+  "Brazil": { shootings: 1, population: 212559417, label:"Brazil" },
+  "Thailand": { shootings: 1, population: 69799978, label:"Thailand" },
+  "Serbia": { shootings: 1, population: 6871547, label:"Serbia" },
+  "Czech Republic": { shootings: 1, population: 10708981, label:"Czech Republic" },
+  "Azerbaijan": { shootings: 1, population: 10139177, label:"Azerbaijan" }
+};
