@@ -448,7 +448,8 @@ const INCIDENTS = [
   {"id":"us-wp-0017","date":"7/17/2000","name":"Dimmitt Middle School","location":"Renton, Washington","lat":47.493015,"lng":-122.233115,"country":"US","killed":0,"injured":0,"type":"Middle School","perp":{"name":"Unknown","age":13,"gender":"Male","race":"Other","cisTrans":null}},
   {"id":"us-wp-0012","date":"2/24/2000","name":"Tecumseh High School","location":"Tecumseh, Oklahoma","lat":35.255494,"lng":-96.943184,"country":"US","killed":0,"injured":0,"type":"High School","perp":{"name":"Unknown","age":19,"gender":"Male","race":null,"cisTrans":null}},
   {"id":"us-wp-0011","date":"2/22/2000","name":"Horn Lake High School","location":"Horn Lake, Mississippi","lat":34.948919,"lng":-90.035423,"country":"US","killed":0,"injured":0,"type":"High School","perp":{"name":"Unknown","age":null,"gender":"Male","race":null,"cisTrans":null}},
-  {"id":"us-wp-0009","date":"1/26/2000","name":"Alicia Reyes Elementary School","location":"Merced, California","lat":37.286387,"lng":-120.494808,"country":"US","killed":0,"injured":0,"type":"Elementary","perp":{"name":"Unknown","age":13,"gender":"Male","race":null,"cisTrans":null}}
+  {"id":"us-wp-0009","date":"1/26/2000","name":"Alicia Reyes Elementary School","location":"Merced, California","lat":37.286387,"lng":-120.494808,"country":"US","killed":0,"injured":0,"type":"Elementary","perp":{"name":"Unknown","age":13,"gender":"Male","race":null,"cisTrans":null}},
+  {"id":"ca-002","date":"2026-02-10","name":"Tumbler Ridge Secondary School","location":"Tumbler Ridge, British Columbia","lat":55.1238,"lng":-121.0016,"country":"Canada","killed":8,"injured":27,"type":"High School","perp":{"name":"Jesse Van Rootselaar","age":18,"gender":"Male","race":"White","cisTrans":"Cisgender"},"note":"Deadliest school shooting in Canada since 1989. Killed 2 relatives at home, then 5 students and 1 education assistant at school."}
 ];
 
 // Export for Node.js
