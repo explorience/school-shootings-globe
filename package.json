@@ -1,0 +1,23 @@
+{
+  "name": "shootings-globe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data-expanded.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/explorience/school-shootings-globe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/explorience/school-shootings-globe/issues"
+  },
+  "homepage": "https://github.com/explorience/school-shootings-globe#readme",
+  "dependencies": {
+    "csv-parser": "^3.2.0"
+  }
+}

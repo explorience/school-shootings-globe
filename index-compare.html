@@ -3,24 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Every School Shooting. Ever.</title>
+<title>Every School Shooting. Ever. - Comparison Mode</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
 
-:root {
-  --primary-red: #ff2d2d;
-  --primary-blue: #00aaff;
-  --dark-bg: #0a0a0a;
-  --panel-bg: rgba(12,12,12,0.97);
-  --text-primary: #e0e0e0;
-  --text-secondary: #888;
-  --border-color: rgba(255,45,45,0.15);
-}
-
 body {
-  background: var(--dark-bg);
-  color: var(--text-primary);
+  background: #0a0a0a;
+  color: #e0e0e0;
   font-family: 'Inter', -apple-system, sans-serif;
   overflow: hidden;
   height: 100vh;
@@ -41,7 +31,6 @@ body {
   padding: 20px 30px;
   background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 60%, transparent 100%);
   pointer-events: none;
-  transition: all 0.3s ease;
 }
 #header h1 {
   font-size: 28px;
@@ -50,22 +39,22 @@ body {
   color: #fff;
   pointer-events: auto;
 }
-#header h1 span { color: var(--primary-red); }
+#header h1 span { color: #ff2d2d; }
 #header .subtitle {
   font-size: 13px;
   font-weight: 300;
-  color: var(--text-secondary);
+  color: #888;
   margin-top: 4px;
 }
 
-/* Stats bar */
+/* Stats bar - modified for comparison */
 #stats-bar {
   position: absolute;
   top: 80px; left: 30px;
   z-index: 10;
   display: flex;
   gap: 24px;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
 }
 .stat-box {
   text-align: center;
@@ -73,9 +62,8 @@ body {
 .stat-number {
   font-size: 32px;
   font-weight: 900;
-  color: var(--primary-red);
+  color: #ff2d2d;
   line-height: 1;
-  transition: all 0.3s ease;
 }
 .stat-label {
   font-size: 10px;
@@ -107,11 +95,11 @@ body {
   text-align: center;
 }
 .comparison-group.group-a {
-  border-left: 4px solid var(--primary-red);
+  border-left: 4px solid #ff2d2d;
   padding-left: 16px;
 }
 .comparison-group.group-b {
-  border-left: 4px solid var(--primary-blue);
+  border-left: 4px solid #00aaff;
   padding-left: 16px;
 }
 .comparison-title {
@@ -121,8 +109,8 @@ body {
   letter-spacing: 1px;
   margin-bottom: 8px;
 }
-.comparison-group.group-a .comparison-title { color: var(--primary-red); }
-.comparison-group.group-b .comparison-title { color: var(--primary-blue); }
+.comparison-group.group-a .comparison-title { color: #ff2d2d; }
+.comparison-group.group-b .comparison-title { color: #00aaff; }
 .comparison-name {
   font-size: 18px;
   font-weight: 600;
@@ -143,8 +131,8 @@ body {
   font-weight: 900;
   line-height: 1;
 }
-.group-a .comparison-stat-number { color: var(--primary-red); }
-.group-b .comparison-stat-number { color: var(--primary-blue); }
+.group-a .comparison-stat-number { color: #ff2d2d; }
+.group-b .comparison-stat-number { color: #00aaff; }
 .comparison-stat-label {
   font-size: 10px;
   font-weight: 500;
@@ -152,6 +140,11 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 4px;
+}
+.comparison-rate {
+  font-size: 11px;
+  color: #888;
+  margin-top: 8px;
 }
 
 .comparison-vs {
@@ -173,174 +166,147 @@ body {
   color: #888;
   margin-bottom: 4px;
 }
+.comparison-conclusion {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.4;
+}
+.comparison-conclusion strong {
+  color: #fff;
+}
 
-/* Timeline Controls */
-#timeline-container {
+/* Comparison controls */
+#comparison-controls {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
-  background: var(--panel-bg);
-  border: 1px solid var(--border-color);
+  top: 160px; left: 30px;
+  z-index: 10;
+  background: rgba(12,12,12,0.97);
+  border: 1px solid rgba(255,45,45,0.15);
   border-radius: 12px;
-  padding: 20px 30px;
+  padding: 20px;
+  width: 320px;
   backdrop-filter: blur(20px);
-  min-width: 400px;
-  transition: all 0.3s ease;
+  display: none;
 }
+#comparison-controls.active { display: block; }
 
-#timeline-controls {
+.comparison-toggle {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #222;
 }
-
-#play-btn {
-  background: var(--primary-red);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-#play-btn:hover {
-  background: #ff5555;
-  transform: scale(1.05);
-}
-
-#play-btn.playing {
-  background: #ff8888;
-}
-
-.timeline-year {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--primary-red);
-  min-width: 80px;
-  text-align: center;
-}
-
-#timeline-slider-container {
+.toggle-switch {
   position: relative;
-  flex: 1;
-  height: 6px;
+  width: 50px;
+  height: 24px;
   background: #333;
-  border-radius: 3px;
-  margin: 0 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
-
-#timeline-slider {
-  width: 100%;
-  height: 6px;
-  background: transparent;
-  outline: none;
-  -webkit-appearance: none;
+.toggle-switch.active { background: #ff2d2d; }
+.toggle-slider {
   position: absolute;
-  top: 0;
-  cursor: pointer;
-}
-
-#timeline-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  background: var(--primary-red);
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
   border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(255, 45, 45, 0.3);
+  transition: all 0.3s;
 }
-
-#timeline-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  background: var(--primary-red);
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(255, 45, 45, 0.3);
+.toggle-switch.active .toggle-slider {
+  transform: translateX(26px);
 }
-
-#timeline-progress {
-  height: 6px;
-  background: linear-gradient(90deg, var(--primary-red), #ff8888);
-  border-radius: 3px;
-  transition: width 0.1s ease;
-}
-
-/* Control Buttons */
-#control-buttons {
-  position: absolute;
-  top: 50%;
-  right: 30px;
-  transform: translateY(-50%);
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.control-btn {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
+.toggle-label {
   font-size: 14px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  min-width: 120px;
-  text-align: center;
+  font-weight: 600;
+  color: #fff;
 }
 
-.control-btn:hover {
-  background: rgba(255,45,45,0.2);
-  border-color: var(--primary-red);
+.comparison-selectors {
+  display: none;
+}
+.comparison-selectors.active { display: block; }
+
+.group-selector {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+.group-selector.group-a {
+  background: rgba(255,45,45,0.05);
+  border-color: rgba(255,45,45,0.2);
+}
+.group-selector.group-b {
+  background: rgba(0,170,255,0.05);
+  border-color: rgba(0,170,255,0.2);
+}
+.group-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.group-selector.group-a .group-label { color: #ff2d2d; }
+.group-selector.group-b .group-label { color: #00aaff; }
+
+.selector-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.selector-row:last-child { margin-bottom: 0; }
+
+.selector-group {
+  flex: 1;
+}
+.selector-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.selector-group select {
+  width: 100%;
+  padding: 6px 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 12px;
+  font-family: inherit;
+}
+.selector-group select:focus {
+  outline: none;
+  border-color: #ff2d2d;
+}
+.group-selector.group-b select:focus {
+  border-color: #00aaff;
 }
 
-.control-btn.active {
-  background: var(--primary-red);
-  border-color: var(--primary-red);
-  color: white;
-}
-
-#share-btn {
-  background: rgba(0,204,255,0.1);
-  border: 1px solid rgba(0,204,255,0.3);
-  color: #00ccff;
-}
-
-#share-btn:hover {
-  background: rgba(0,204,255,0.2);
-  border-color: #00ccff;
-}
-
-/* Side panel - Enhanced for mobile */
+/* Side panel */
 #panel {
   position: absolute;
   top: 0; right: 0;
   width: 380px; height: 100%;
   z-index: 20;
-  background: var(--panel-bg);
-  border-left: 1px solid var(--border-color);
+  background: rgba(12,12,12,0.97);
+  border-left: 1px solid rgba(255,45,45,0.15);
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.3s ease;
   backdrop-filter: blur(20px);
 }
-
 #panel.open { transform: translateX(0); }
-
 #panel-close {
   position: absolute;
   top: 15px; right: 15px;
@@ -349,17 +315,14 @@ body {
   cursor: pointer;
   z-index: 21;
 }
-
-#panel-close:hover { color: var(--primary-red); }
+#panel-close:hover { color: #ff2d2d; }
 
 /* Panel tabs */
 .panel-tabs {
   display: flex;
   border-bottom: 1px solid #222;
   padding: 15px 20px 0;
-  overflow-x: auto;
 }
-
 .panel-tab {
   padding: 8px 16px;
   font-size: 12px;
@@ -369,12 +332,10 @@ body {
   border-bottom: 2px solid transparent;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  white-space: nowrap;
 }
-
 .panel-tab.active {
-  color: var(--primary-red);
-  border-bottom-color: var(--primary-red);
+  color: #ff2d2d;
+  border-bottom-color: #ff2d2d;
 }
 
 .panel-content {
@@ -383,67 +344,39 @@ body {
 }
 .panel-content.active { display: block; }
 
-/* Toggle button */
-#panel-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 15;
-  background: rgba(255,45,45,0.15);
-  border: 1px solid var(--border-color);
-  color: var(--primary-red);
-  padding: 12px 8px;
-  border-radius: 6px 0 0 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-#panel-toggle:hover {
-  background: rgba(255,45,45,0.3);
-}
-
-#panel-toggle.hidden { display: none; }
-
-/* Incident detail styles */
+/* Incident detail */
 .incident-title {
   font-size: 20px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 4px;
 }
-
 .incident-meta {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: #888;
   margin-bottom: 16px;
 }
-
 .incident-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 20px;
 }
-
 .incident-stat {
   background: rgba(255,45,45,0.08);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255,45,45,0.15);
   border-radius: 8px;
   padding: 12px;
   text-align: center;
 }
-
 .incident-stat .num {
   font-size: 28px;
   font-weight: 900;
-  color: var(--primary-red);
+  color: #ff2d2d;
 }
-
 .incident-stat .lbl {
   font-size: 10px;
-  color: var(--text-secondary);
+  color: #888;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -452,113 +385,56 @@ body {
 .demo-section {
   margin-bottom: 24px;
 }
-
 .demo-section h3 {
   font-size: 12px;
   font-weight: 600;
-  color: var(--primary-red);
+  color: #ff2d2d;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 12px;
   padding-bottom: 6px;
   border-bottom: 1px solid #222;
 }
-
 .demo-bar-row {
   margin-bottom: 10px;
 }
-
 .demo-bar-label {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
   margin-bottom: 4px;
 }
-
 .demo-bar-label .name { color: #ccc; }
-.demo-bar-label .value { color: var(--primary-red); font-weight: 600; }
-
+.demo-bar-label .value { color: #ff2d2d; font-weight: 600; }
 .demo-bar {
   height: 6px;
   background: #1a1a1a;
   border-radius: 3px;
   overflow: hidden;
 }
-
 .demo-bar-fill {
   height: 100%;
   border-radius: 3px;
   transition: width 0.6s ease;
 }
 
-/* Callout boxes */
+/* Comparison callouts */
 .callout {
   background: rgba(255,45,45,0.06);
-  border-left: 3px solid var(--primary-red);
+  border-left: 3px solid #ff2d2d;
   padding: 12px 16px;
   margin-bottom: 12px;
   font-size: 13px;
   line-height: 1.5;
   color: #ccc;
 }
-
 .callout strong { color: #fff; }
 .callout .big-num {
   font-size: 36px;
   font-weight: 900;
-  color: var(--primary-red);
+  color: #ff2d2d;
   display: block;
   line-height: 1;
-  margin-bottom: 4px;
-}
-
-/* Featured trans section */
-.featured-section {
-  background: linear-gradient(135deg, rgba(255,45,45,0.1) 0%, rgba(255,45,45,0.05) 100%);
-  border: 2px solid var(--primary-red);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  text-align: center;
-}
-
-.featured-section h2 {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--primary-red);
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  letter-spacing: -0.5px;
-}
-
-.trans-comparison {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.comparison-block {
-  text-align: center;
-  padding: 20px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 8px;
-  border: 1px solid #333;
-}
-
-.big-number {
-  font-size: 48px;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.cis-number { color: var(--primary-red); }
-.trans-number { color: #00ccff; }
-
-.comparison-label {
-  font-size: 14px;
-  font-weight: 600;
   margin-bottom: 4px;
 }
 
@@ -566,7 +442,6 @@ body {
 .filter-group {
   margin-bottom: 16px;
 }
-
 .filter-group label {
   display: block;
   font-size: 11px;
@@ -576,22 +451,62 @@ body {
   letter-spacing: 1px;
   margin-bottom: 6px;
 }
-
 .filter-group select, .filter-group input {
   width: 100%;
   padding: 8px 12px;
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 6px;
-  color: var(--text-primary);
+  color: #e0e0e0;
   font-size: 13px;
   font-family: inherit;
 }
-
 .filter-group select:focus, .filter-group input:focus {
   outline: none;
-  border-color: var(--primary-red);
+  border-color: #ff2d2d;
 }
+
+/* Toggle button */
+#panel-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 15;
+  background: rgba(255,45,45,0.15);
+  border: 1px solid rgba(255,45,45,0.3);
+  color: #ff2d2d;
+  padding: 12px 8px;
+  border-radius: 6px 0 0 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+#panel-toggle:hover {
+  background: rgba(255,45,45,0.3);
+}
+#panel-toggle.hidden { display: none; }
+
+/* Comparison toggle button */
+#comparison-toggle-btn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 15;
+  background: rgba(0,170,255,0.15);
+  border: 1px solid rgba(0,170,255,0.3);
+  color: #00aaff;
+  padding: 12px 8px;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+#comparison-toggle-btn:hover {
+  background: rgba(0,170,255,0.3);
+}
+#comparison-toggle-btn.hidden { display: none; }
 
 /* Country comparison */
 .country-row {
@@ -602,31 +517,8 @@ body {
 }
 .country-row .flag { width: 24px; margin-right: 10px; font-size: 16px; }
 .country-row .cname { flex: 1; font-size: 13px; color: #ccc; }
-.country-row .ccount { font-size: 16px; font-weight: 700; color: var(--primary-red); width: 50px; text-align: right; }
+.country-row .ccount { font-size: 16px; font-weight: 700; color: #ff2d2d; width: 50px; text-align: right; }
 .country-row .crate { font-size: 11px; color: #666; width: 80px; text-align: right; }
-
-/* Gender comparison */
-.gender-block {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 12px;
-  padding: 12px;
-  background: rgba(255,255,255,0.02);
-  border-radius: 8px;
-}
-.gender-pct {
-  font-size: 48px;
-  font-weight: 900;
-  color: var(--primary-red);
-  line-height: 1;
-  min-width: 120px;
-}
-.gender-label {
-  font-size: 13px;
-  color: #888;
-}
-.gender-label strong { color: #ccc; }
 
 /* Methodology */
 #methodology {
@@ -667,7 +559,7 @@ body {
   margin: 12px 0 6px;
 }
 #methodology-content h4:first-child { margin-top: 0; }
-#methodology-content a { color: var(--primary-red); }
+#methodology-content a { color: #ff2d2d; }
 
 /* Tooltip */
 #tooltip {
@@ -685,14 +577,37 @@ body {
 #tooltip .tt-name { font-size: 14px; font-weight: 700; color: #fff; }
 #tooltip .tt-date { font-size: 11px; color: #888; margin-bottom: 6px; }
 #tooltip .tt-stats { font-size: 12px; color: #ccc; }
-#tooltip .tt-stats span { color: var(--primary-red); font-weight: 700; }
+#tooltip .tt-stats span { color: #ff2d2d; font-weight: 700; }
+
+/* Gender comparison */
+.gender-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+}
+.gender-pct {
+  font-size: 48px;
+  font-weight: 900;
+  color: #ff2d2d;
+  line-height: 1;
+  min-width: 120px;
+}
+.gender-label {
+  font-size: 13px;
+  color: #888;
+}
+.gender-label strong { color: #ccc; }
 
 /* Loading */
 #loading {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: var(--dark-bg);
+  background: #0a0a0a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -703,7 +618,7 @@ body {
 #loading.fade { opacity: 0; pointer-events: none; }
 #loading .pulse {
   width: 20px; height: 20px;
-  background: var(--primary-red);
+  background: #ff2d2d;
   border-radius: 50%;
   animation: pulse 1.5s infinite;
 }
@@ -716,144 +631,6 @@ body {
   margin-top: 20px;
   color: #666;
   font-size: 13px;
-}
-
-/* Share notification */
-.share-notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(0,204,255,0.9);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  z-index: 1000;
-  opacity: 0;
-  transform: translateX(100%);
-  transition: all 0.3s ease;
-}
-
-.share-notification.show {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Mobile responsive design */
-@media (max-width: 768px) {
-  #header {
-    padding: 15px 20px;
-  }
-  
-  #header h1 {
-    font-size: 24px;
-  }
-  
-  #stats-bar {
-    top: 70px;
-    left: 20px;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  
-  .stat-number {
-    font-size: 24px;
-  }
-  
-  #control-buttons {
-    right: 20px;
-    gap: 8px;
-  }
-  
-  .control-btn {
-    padding: 10px;
-    font-size: 12px;
-    min-width: 100px;
-  }
-  
-  #timeline-container {
-    bottom: 10px;
-    left: 20px;
-    right: 20px;
-    transform: none;
-    min-width: auto;
-    padding: 15px 20px;
-  }
-  
-  #comparison-stats {
-    left: 20px;
-    right: 20px;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  /* Bottom sheet style panel for mobile */
-  #panel {
-    width: 100%;
-    height: 60%;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: translateY(100%);
-    border-left: none;
-    border-top: 1px solid var(--border-color);
-    border-radius: 20px 20px 0 0;
-  }
-
-  #panel.open {
-    transform: translateY(0);
-  }
-  
-  /* Add pull handle for mobile */
-  #panel::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 4px;
-    background: #666;
-    border-radius: 2px;
-  }
-  
-  .panel-tabs {
-    padding-top: 25px;
-  }
-}
-
-@media (max-width: 480px) {
-  #timeline-container {
-    left: 10px;
-    right: 10px;
-    padding: 12px 15px;
-  }
-  
-  #timeline-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .timeline-year {
-    font-size: 16px;
-  }
-  
-  #stats-bar {
-    gap: 12px;
-  }
-  
-  .stat-number {
-    font-size: 20px;
-  }
-
-  .trans-comparison {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .big-number {
-    font-size: 36px;
-  }
 }
 
 /* Scrollbar */
@@ -874,9 +651,10 @@ body {
 
 <div id="header">
   <h1>Every School Shooting. <span>Ever.</span></h1>
-  <div class="subtitle">Interactive visualization of school &amp; campus shootings worldwide. Click any point to explore.</div>
+  <div class="subtitle">Interactive visualization with demographic comparison mode. Toggle comparison to explore patterns.</div>
 </div>
 
+<!-- Regular stats bar -->
 <div id="stats-bar">
   <div class="stat-box">
     <div class="stat-number" id="total-incidents">0</div>
@@ -896,11 +674,11 @@ body {
   </div>
 </div>
 
-<!-- Comparison stats (hidden by default) -->
+<!-- Comparison stats bar -->
 <div id="comparison-stats">
   <div class="comparison-group group-a">
     <div class="comparison-title">Group A</div>
-    <div class="comparison-name" id="group-a-name">Cisgender</div>
+    <div class="comparison-name" id="group-a-name">Select Groups</div>
     <div class="comparison-stats-grid">
       <div class="comparison-stat">
         <div class="comparison-stat-number" id="group-a-incidents">0</div>
@@ -915,17 +693,20 @@ body {
         <div class="comparison-stat-label">Injured</div>
       </div>
     </div>
+    <div class="comparison-rate" id="group-a-rate">Rate: --</div>
   </div>
   
   <div class="comparison-vs">
-    <div class="comparison-ratio-label">Per-capita rate</div>
+    <div class="comparison-ratio-label">More likely</div>
     <div class="comparison-ratio" id="comparison-ratio">--</div>
-    <div style="font-size: 11px; color: #888;">Group A vs Group B</div>
+    <div class="comparison-conclusion" id="comparison-conclusion">
+      Select comparison groups to see per-capita analysis
+    </div>
   </div>
   
   <div class="comparison-group group-b">
     <div class="comparison-title">Group B</div>
-    <div class="comparison-name" id="group-b-name">Transgender</div>
+    <div class="comparison-name" id="group-b-name">Select Groups</div>
     <div class="comparison-stats-grid">
       <div class="comparison-stat">
         <div class="comparison-stat-number" id="group-b-incidents">0</div>
@@ -940,29 +721,69 @@ body {
         <div class="comparison-stat-label">Injured</div>
       </div>
     </div>
+    <div class="comparison-rate" id="group-b-rate">Rate: --</div>
   </div>
 </div>
 
-<!-- Timeline Controls -->
-<div id="timeline-container">
-  <div id="timeline-controls">
-    <button id="play-btn" onclick="togglePlayback()">▶</button>
-    <div class="timeline-year" id="timeline-year">All Years</div>
-    <div id="timeline-slider-container">
-      <div id="timeline-progress"></div>
-      <input type="range" id="timeline-slider" min="1960" max="2026" value="2026" oninput="updateTimelineYear(this.value)">
+<!-- Comparison controls -->
+<div id="comparison-controls">
+  <div class="comparison-toggle">
+    <div class="toggle-switch" id="comparison-switch" onclick="toggleComparison()">
+      <div class="toggle-slider"></div>
     </div>
-    <div class="timeline-year">2026</div>
+    <div class="toggle-label">Comparison Mode</div>
+  </div>
+  
+  <div class="comparison-selectors" id="comparison-selectors">
+    <div class="group-selector group-a">
+      <div class="group-label">Group A (Red)</div>
+      <div class="selector-row">
+        <div class="selector-group">
+          <label>Category</label>
+          <select id="group-a-category" onchange="updateGroupOptions('a')">
+            <option value="">Select Category</option>
+            <option value="gender">Gender</option>
+            <option value="trans">Trans Status</option>
+            <option value="race">Race</option>
+            <option value="age">Age</option>
+            <option value="country">Country</option>
+          </select>
+        </div>
+        <div class="selector-group">
+          <label>Value</label>
+          <select id="group-a-value" onchange="updateComparison()">
+            <option value="">Select Value</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="group-selector group-b">
+      <div class="group-label">Group B (Blue)</div>
+      <div class="selector-row">
+        <div class="selector-group">
+          <label>Category</label>
+          <select id="group-b-category" onchange="updateGroupOptions('b')">
+            <option value="">Select Category</option>
+            <option value="gender">Gender</option>
+            <option value="trans">Trans Status</option>
+            <option value="race">Race</option>
+            <option value="age">Age</option>
+            <option value="country">Country</option>
+          </select>
+        </div>
+        <div class="selector-group">
+          <label>Value</label>
+          <select id="group-b-value" onchange="updateComparison()">
+            <option value="">Select Value</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Control Buttons -->
-<div id="control-buttons">
-  <button class="control-btn" id="heatmap-btn" onclick="toggleHeatmap()">🔥 Heatmap</button>
-  <button class="control-btn" id="comparison-btn" onclick="toggleComparison()">⚡ Compare</button>
-  <button class="control-btn" id="share-btn" onclick="shareVisualization()">📤 Share</button>
-</div>
-
+<button id="comparison-toggle-btn" onclick="toggleComparisonPanel()">Compare ▶</button>
 <button id="panel-toggle" onclick="togglePanel()">◀ Data</button>
 
 <div id="panel">
@@ -976,12 +797,6 @@ body {
 
   <!-- Demographics Tab -->
   <div class="panel-content active" id="tab-demographics">
-    <!-- Featured Trans vs Cis Section -->
-    <div class="featured-section">
-      <h2>Trans vs Cisgender Perpetrators</h2>
-      <div id="trans-comparison-detailed"></div>
-    </div>
-
     <div class="demo-section">
       <h3>Gender of Perpetrators (US School Shootings)</h3>
       <div class="gender-block">
@@ -992,6 +807,11 @@ body {
         <div class="gender-pct" id="female-pct" style="font-size:32px">--</div>
         <div class="gender-label"><strong>Female</strong></div>
       </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>Trans vs Cisgender Perpetrators</h3>
+      <div id="trans-comparison"></div>
     </div>
 
     <div class="demo-section">
@@ -1052,14 +872,6 @@ body {
       </select>
     </div>
     <div class="filter-group">
-      <label>Cis/Trans Status</label>
-      <select id="filter-cistrans" onchange="applyFilters()">
-        <option value="">All</option>
-        <option value="Cisgender">Cisgender</option>
-        <option value="Transgender">Transgender</option>
-      </select>
-    </div>
-    <div class="filter-group">
       <label>Year Range</label>
       <div style="display:flex;gap:8px">
         <input type="number" id="filter-year-from" placeholder="From" min="1960" max="2026" onchange="applyFilters()">
@@ -1094,75 +906,54 @@ body {
       <li><a href="https://k12ssdb.org" target="_blank">K-12 School Shooting Database</a> - Every US K-12 school shooting since 1970</li>
       <li><a href="https://www.theviolenceproject.org" target="_blank">The Violence Project</a> - Mass Shooter Database with demographic data</li>
       <li><a href="https://www.gunviolencearchive.org" target="_blank">Gun Violence Archive</a> - Near real-time US gun violence data</li>
-      <li><a href="https://www.washingtonpost.com/graphics/2018/local/school-shootings-database/" target="_blank">Washington Post</a> - Comprehensive US school shooting database</li>
       <li><a href="https://en.wikipedia.org/wiki/List_of_school_shootings_in_the_United_States" target="_blank">Wikipedia</a> - Comprehensive lists of school shootings globally</li>
       <li><a href="https://worldpopulationreview.com/country-rankings/school-shootings-by-country" target="_blank">World Population Review</a> - Country comparison data</li>
     </ul>
 
     <h4>Definitions</h4>
-    <p><strong>School shooting:</strong> An incident where a firearm was discharged at a school, university, or educational institution, resulting in casualties or intended casualties.</p>
-    <p><strong>Perpetrator demographics:</strong> Race/ethnicity classifications follow US Census categories. Trans status is based on available reporting and self-identification where known.</p>
-
-    <h4>Dataset Integration</h4>
-    <p>This final dataset combines 445+ incidents from multiple sources:</p>
-    <ul style="margin-left:16px">
-      <li><strong>Washington Post data:</strong> Comprehensive US incidents but with limited race detail (many "Other"/"Unknown")</li>
-      <li><strong>Curated data:</strong> Manually researched incidents with improved demographic accuracy</li>
-      <li><strong>International data:</strong> Major incidents from global sources including terrorist attacks at schools</li>
-    </ul>
-
-    <h4>Trans vs Cisgender Analysis</h4>
-    <p>The trans/cis comparison uses conservative estimates:</p>
-    <ul style="margin-left:16px">
-      <li>Only perpetrators with confirmed trans status are classified as transgender</li>
-      <li>US trans population estimate: 1.6% (Pew Research, 2022)</li>
-      <li>Analysis focuses on US incidents where demographic data is most complete</li>
-      <li>Per-capita rates use 2020 Census population data</li>
-    </ul>
+    <p><strong>School shooting:</strong> An incident where a firearm was discharged at a school, university, or educational institution, resulting in casualties.</p>
+    <p><strong>Perpetrator demographics:</strong> Race/ethnicity classifications follow US Census categories. Where perpetrators have mixed heritage, they are classified as "Mixed" unless self-identified otherwise.</p>
 
     <h4>Limitations</h4>
     <ul style="margin-left:16px">
-      <li>This visualization shows major incidents with detailed data. Additional incidents exist but lack comprehensive demographics.</li>
+      <li>This visualization shows major incidents with detailed data. The K-12 SSDB documents 2,400+ incidents in the US alone; most are lower-casualty events not individually mapped here.</li>
       <li>International data is less complete than US data due to reporting differences.</li>
+      <li>Religion data is available for fewer than 10% of perpetrators and is excluded from demographic analysis.</li>
       <li>Some historical coordinates are approximate.</li>
-      <li>Terrorist attacks at schools (Beslan, Peshawar, Garissa) are included but noted separately as they differ in motive and scale.</li>
-      <li>Race/ethnicity data quality varies by source and time period.</li>
+      <li>Terrorist attacks at schools (Beslan, Peshawar, Garissa) are included but noted separately as they differ in motive and scale from individual school shootings.</li>
     </ul>
 
-    <h4>Interactive Features</h4>
-    <p><strong>Timeline:</strong> Use the timeline slider to filter by year range or press play for an animated progression.</p>
-    <p><strong>Heatmap:</strong> Toggle to show incident density overlays on the globe.</p>
-    <p><strong>Comparison Mode:</strong> Compare two demographic groups side-by-side with color-coded markers and statistics.</p>
-    <p><strong>Filters:</strong> Use the filter panel to narrow down incidents by country, demographics, school type, or time period.</p>
+    <h4>Per-Capita Methodology</h4>
+    <p>Per-capita comparisons use 2020 US Census population data. Rates are calculated as (number of perpetrators of group / population of group) normalized per million. These rates reflect the dataset's incidents, not all gun violence.</p>
+
+    <h4>Comparison Mode</h4>
+    <p>Comparison mode allows side-by-side analysis of two demographic groups. Red markers represent Group A, blue markers represent Group B. The "X times more likely" calculation compares per-capita rates using relevant population data (US Census for domestic comparisons, World Bank for international).</p>
 
     <h4>Note on Completeness</h4>
-    <p>No dataset of school shootings is fully complete. This visualization prioritizes accuracy over comprehensiveness. If you notice an error or missing incident, the data methodology is documented for verification.</p>
+    <p>No dataset of school shootings is fully complete. This visualization prioritizes accuracy over comprehensiveness. If you notice an error or missing incident, the data is open for correction.</p>
   </div>
 </div>
 
 <script src="https://unpkg.com/globe.gl@2.31.0/dist/globe.gl.min.js"></script>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
 <script src="data.js"></script>
 <script>
-// ========== GLOBAL VARIABLES ==========
+// ========== INITIALIZATION ==========
 let globe;
 let filteredData = [...INCIDENTS];
 let selectedIncident = null;
-let entryAnimationComplete = false;
-
-// Timeline variables
-let currentTimelineYear = 2026;
-let timelineAnimating = false;
-let timelineAnimationId = null;
-
-// Feature toggles
-let showHeatmap = false;
-let showArcs = false;
 let comparisonMode = false;
-let currentComparison = { groupA: 'Cisgender', groupB: 'Transgender', field: 'cisTrans' };
+let groupAFilter = null;
+let groupBFilter = null;
 
-// ========== INITIALIZATION ==========
+// Comparison options
+const COMPARISON_OPTIONS = {
+  gender: ["Male", "Female", "Transgender Male"],
+  trans: ["Cisgender", "Transgender"],
+  race: ["White", "Black", "Latino", "Asian", "Native American", "Mixed"],
+  age: ["Under 21", "Over 21"],
+  country: ["US", "Rest of World"]
+};
+
 function init() {
   // Build globe
   globe = Globe()
@@ -1173,7 +964,7 @@ function init() {
     .showAtmosphere(true)
     .atmosphereColor('#ff2d2d')
     .atmosphereAltitude(0.15)
-    .pointsData(getFilteredDataByYear())
+    .pointsData(INCIDENTS)
     .pointLat(d => d.lat)
     .pointLng(d => d.lng)
     .pointAltitude(d => Math.min(0.3, (d.killed || 1) * 0.008))
@@ -1203,233 +994,237 @@ function init() {
     }
   });
 
-  // Initial camera position for entry animation
-  globe.pointOfView({ lat: 30, lng: -40, altitude: 3.5 });
+  // Initial camera
+  globe.pointOfView({ lat: 30, lng: -40, altitude: 2.2 });
 
-  // Start entry animation
-  startEntryAnimation();
-
-  // Populate initial stats and interface
-  updateStats(getFilteredDataByYear());
+  // Populate stats
+  updateStats(INCIDENTS);
+  
+  // Build demographics
   buildDemographics();
   buildCountryList();
   populateFilters();
 
-  // Initialize timeline
-  updateTimelineDisplay();
-
-  // Hide loading screen
+  // Hide loading
   setTimeout(() => {
     document.getElementById('loading').classList.add('fade');
     setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
   }, 1500);
 }
 
-// ========== ENTRY ANIMATION ==========
-function startEntryAnimation() {
-  // Slowly rotate globe
-  let rotation = 0;
-  const rotationSpeed = 0.5;
-  
-  const rotateInterval = setInterval(() => {
-    rotation += rotationSpeed;
-    globe.pointOfView({ lat: 30, lng: -40 + rotation, altitude: 3.5 });
-  }, 50);
-
-  // After 3 seconds, zoom to US
-  setTimeout(() => {
-    clearInterval(rotateInterval);
-    // Zoom to US center
-    globe.pointOfView({ lat: 39.5, lng: -98.35, altitude: 1.2 }, 2000);
-    entryAnimationComplete = true;
-  }, 3000);
-}
-
-// ========== POINT COLORING ==========
+// ========== COMPARISON MODE ==========
 function getPointColor(d) {
-  if (comparisonMode) {
-    // Color based on comparison groups
-    const value = d.perp?.[currentComparison.field];
-    if (value === currentComparison.groupA) return '#ff2d2d';
-    if (value === currentComparison.groupB) return '#00aaff';
-    return '#666'; // Unknown/other
-  } else {
-    // Standard coloring by casualties
+  if (!comparisonMode || !groupAFilter || !groupBFilter) {
+    // Default red color scheme
     const k = d.killed || 0;
     if (k >= 20) return '#ff0000';
     if (k >= 10) return '#ff2d2d';
     if (k >= 5) return '#ff5555';
     return '#ff8888';
   }
-}
-
-// ========== TIMELINE FUNCTIONALITY ==========
-function getFilteredDataByYear() {
-  const maxYear = currentTimelineYear === 2026 ? 2026 : currentTimelineYear;
-  return filteredData.filter(d => {
-    const year = parseInt(d.date.substring(0, 4));
-    return year <= maxYear;
-  });
-}
-
-function updateTimelineYear(year) {
-  currentTimelineYear = parseInt(year);
-  updateTimelineDisplay();
-  globe.pointsData(getFilteredDataByYear());
-  updateStats(getFilteredDataByYear());
   
-  if (comparisonMode) {
-    updateComparisonStats();
-  }
-}
-
-function updateTimelineDisplay() {
-  const slider = document.getElementById('timeline-slider');
-  const yearDisplay = document.getElementById('timeline-year');
-  const progress = document.getElementById('timeline-progress');
-  
-  slider.value = currentTimelineYear;
-  yearDisplay.textContent = currentTimelineYear === 2026 ? 'All Years' : currentTimelineYear;
-  
-  const progressPercent = ((currentTimelineYear - 1960) / (2026 - 1960)) * 100;
-  progress.style.width = progressPercent + '%';
-}
-
-function togglePlayback() {
-  const playBtn = document.getElementById('play-btn');
-  
-  if (!timelineAnimating) {
-    // Start animation
-    timelineAnimating = true;
-    playBtn.textContent = '⏸';
-    playBtn.classList.add('playing');
-    
-    // Reset to start if we're at the end
-    if (currentTimelineYear >= 2026) {
-      currentTimelineYear = 1960;
-    }
-    
-    animateTimeline();
+  // Comparison mode
+  if (matchesFilter(d, groupAFilter)) {
+    return '#ff2d2d'; // Red for Group A
+  } else if (matchesFilter(d, groupBFilter)) {
+    return '#00aaff'; // Blue for Group B
   } else {
-    // Stop animation
-    stopTimeline();
+    return '#333333'; // Gray for neither
   }
 }
 
-function stopTimeline() {
-  timelineAnimating = false;
-  document.getElementById('play-btn').textContent = '▶';
-  document.getElementById('play-btn').classList.remove('playing');
+function matchesFilter(incident, filter) {
+  if (!filter || !incident.perp) return false;
   
-  if (timelineAnimationId) {
-    clearInterval(timelineAnimationId);
-    timelineAnimationId = null;
-  }
-}
-
-function animateTimeline() {
-  timelineAnimationId = setInterval(() => {
-    if (currentTimelineYear >= 2026) {
-      stopTimeline();
-      return;
-    }
-    
-    currentTimelineYear++;
-    updateTimelineYear(currentTimelineYear);
-  }, 200); // 200ms per year
-}
-
-// ========== FEATURE TOGGLES ==========
-function toggleHeatmap() {
-  showHeatmap = !showHeatmap;
-  const btn = document.getElementById('heatmap-btn');
-  btn.classList.toggle('active', showHeatmap);
-  
-  if (showHeatmap) {
-    // Enable heatmap visualization
-    // This would implement heatmap functionality
-    btn.textContent = '🔥 Heatmap On';
-  } else {
-    btn.textContent = '🔥 Heatmap';
+  switch (filter.category) {
+    case 'gender':
+      return incident.perp.gender === filter.value;
+    case 'trans':
+      const cisTrans = incident.perp.cisTrans || (incident.perp.gender === 'Transgender Male' ? 'Transgender' : 'Cisgender');
+      return cisTrans === filter.value;
+    case 'race':
+      return incident.perp.race === filter.value;
+    case 'age':
+      const age = parseInt(incident.perp.age);
+      if (isNaN(age)) return false;
+      return filter.value === 'Under 21' ? age < 21 : age >= 21;
+    case 'country':
+      return filter.value === 'US' ? incident.country === 'US' : incident.country !== 'US';
+    default:
+      return false;
   }
 }
 
 function toggleComparison() {
-  comparisonMode = !comparisonMode;
-  const btn = document.getElementById('comparison-btn');
-  const statsBar = document.getElementById('stats-bar');
-  const compStats = document.getElementById('comparison-stats');
+  const switchEl = document.getElementById('comparison-switch');
+  const selectorsEl = document.getElementById('comparison-selectors');
+  const statsEl = document.getElementById('stats-bar');
+  const compStatsEl = document.getElementById('comparison-stats');
   
-  btn.classList.toggle('active', comparisonMode);
+  comparisonMode = !comparisonMode;
   
   if (comparisonMode) {
-    btn.textContent = '⚡ Compare On';
-    statsBar.style.display = 'none';
-    compStats.classList.add('active');
-    updateComparisonStats();
+    switchEl.classList.add('active');
+    selectorsEl.classList.add('active');
+    statsEl.style.display = 'none';
+    compStatsEl.classList.add('active');
   } else {
-    btn.textContent = '⚡ Compare';
-    statsBar.style.display = 'flex';
-    compStats.classList.remove('active');
+    switchEl.classList.remove('active');
+    selectorsEl.classList.remove('active');
+    statsEl.style.display = 'flex';
+    compStatsEl.classList.remove('active');
+    groupAFilter = null;
+    groupBFilter = null;
   }
   
+  updateGlobeColors();
+}
+
+function toggleComparisonPanel() {
+  const panel = document.getElementById('comparison-controls');
+  const btn = document.getElementById('comparison-toggle-btn');
+  panel.classList.toggle('active');
+  btn.classList.toggle('hidden');
+}
+
+function updateGroupOptions(group) {
+  const categorySelect = document.getElementById(`group-${group}-category`);
+  const valueSelect = document.getElementById(`group-${group}-value`);
+  const category = categorySelect.value;
+  
+  // Clear value options
+  valueSelect.innerHTML = '<option value="">Select Value</option>';
+  
+  if (category && COMPARISON_OPTIONS[category]) {
+    COMPARISON_OPTIONS[category].forEach(option => {
+      const el = document.createElement('option');
+      el.value = option;
+      el.textContent = option;
+      valueSelect.appendChild(el);
+    });
+  }
+  
+  updateComparison();
+}
+
+function updateComparison() {
+  const groupACategory = document.getElementById('group-a-category').value;
+  const groupAValue = document.getElementById('group-a-value').value;
+  const groupBCategory = document.getElementById('group-b-category').value;
+  const groupBValue = document.getElementById('group-b-value').value;
+  
+  // Update filters
+  groupAFilter = groupACategory && groupAValue ? { category: groupACategory, value: groupAValue } : null;
+  groupBFilter = groupBCategory && groupBValue ? { category: groupBCategory, value: groupBValue } : null;
+  
   // Update globe colors
-  globe.pointsData(getFilteredDataByYear());
+  updateGlobeColors();
+  
+  // Update comparison stats
+  updateComparisonStats();
+}
+
+function updateGlobeColors() {
+  globe.pointsData([...filteredData]); // Force refresh
 }
 
 function updateComparisonStats() {
-  const data = getFilteredDataByYear();
-  const usData = data.filter(d => d.country === 'US' && d.perp);
-  
-  const groupAData = usData.filter(d => d.perp[currentComparison.field] === currentComparison.groupA);
-  const groupBData = usData.filter(d => d.perp[currentComparison.field] === currentComparison.groupB);
-  
-  // Update display
-  document.getElementById('group-a-name').textContent = currentComparison.groupA;
-  document.getElementById('group-b-name').textContent = currentComparison.groupB;
-  
-  document.getElementById('group-a-incidents').textContent = groupAData.length;
-  document.getElementById('group-a-killed').textContent = groupAData.reduce((s, d) => s + (d.killed || 0), 0);
-  document.getElementById('group-a-injured').textContent = groupAData.reduce((s, d) => s + (d.injured || 0), 0);
-  
-  document.getElementById('group-b-incidents').textContent = groupBData.length;
-  document.getElementById('group-b-killed').textContent = groupBData.reduce((s, d) => s + (d.killed || 0), 0);
-  document.getElementById('group-b-injured').textContent = groupBData.reduce((s, d) => s + (d.injured || 0), 0);
-  
-  // Calculate per-capita ratio
-  const popA = US_POPULATION.byTransStatus[currentComparison.groupA]?.pop || 1;
-  const popB = US_POPULATION.byTransStatus[currentComparison.groupB]?.pop || 1;
-  const rateA = (groupAData.length / popA) * 1000000;
-  const rateB = (groupBData.length / popB) * 1000000;
-  const ratio = rateA / (rateB || 0.001);
-  
-  document.getElementById('comparison-ratio').textContent = ratio.toFixed(1) + '×';
-}
-
-function shareVisualization() {
-  // Copy current URL to clipboard
-  navigator.clipboard.writeText(window.location.href).then(() => {
-    showShareNotification('Link copied to clipboard!');
-  }).catch(() => {
-    // Fallback for older browsers
-    showShareNotification('Share: ' + window.location.href);
-  });
-}
-
-function showShareNotification(message) {
-  let notification = document.querySelector('.share-notification');
-  if (!notification) {
-    notification = document.createElement('div');
-    notification.className = 'share-notification';
-    document.body.appendChild(notification);
+  if (!groupAFilter || !groupBFilter) {
+    // Reset to defaults
+    document.getElementById('group-a-name').textContent = 'Select Groups';
+    document.getElementById('group-b-name').textContent = 'Select Groups';
+    document.getElementById('comparison-conclusion').textContent = 'Select comparison groups to see per-capita analysis';
+    return;
   }
   
-  notification.textContent = message;
-  notification.classList.add('show');
+  // Filter data for each group
+  const groupAData = filteredData.filter(d => matchesFilter(d, groupAFilter));
+  const groupBData = filteredData.filter(d => matchesFilter(d, groupBFilter));
   
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 3000);
+  // Calculate stats
+  const groupAStats = {
+    incidents: groupAData.length,
+    killed: groupAData.reduce((s, d) => s + (d.killed || 0), 0),
+    injured: groupAData.reduce((s, d) => s + (d.injured || 0), 0)
+  };
+  
+  const groupBStats = {
+    incidents: groupBData.length,
+    killed: groupBData.reduce((s, d) => s + (d.killed || 0), 0),
+    injured: groupBData.reduce((s, d) => s + (d.injured || 0), 0)
+  };
+  
+  // Update display
+  document.getElementById('group-a-name').textContent = groupAFilter.value;
+  document.getElementById('group-b-name').textContent = groupBFilter.value;
+  
+  document.getElementById('group-a-incidents').textContent = groupAStats.incidents;
+  document.getElementById('group-a-killed').textContent = groupAStats.killed;
+  document.getElementById('group-a-injured').textContent = groupAStats.injured;
+  
+  document.getElementById('group-b-incidents').textContent = groupBStats.incidents;
+  document.getElementById('group-b-killed').textContent = groupBStats.killed;
+  document.getElementById('group-b-injured').textContent = groupBStats.injured;
+  
+  // Calculate per-capita rates and comparison
+  const rateComparison = calculateRateComparison(groupAFilter, groupBFilter, groupAStats, groupBStats);
+  
+  if (rateComparison) {
+    document.getElementById('group-a-rate').textContent = `Rate: ${rateComparison.groupARate} per million`;
+    document.getElementById('group-b-rate').textContent = `Rate: ${rateComparison.groupBRate} per million`;
+    document.getElementById('comparison-ratio').textContent = rateComparison.ratio + '×';
+    document.getElementById('comparison-conclusion').innerHTML = rateComparison.conclusion;
+  } else {
+    document.getElementById('group-a-rate').textContent = 'Rate: --';
+    document.getElementById('group-b-rate').textContent = 'Rate: --';
+    document.getElementById('comparison-ratio').textContent = '--';
+    document.getElementById('comparison-conclusion').textContent = 'Population data not available for this comparison';
+  }
+}
+
+function calculateRateComparison(filterA, filterB, statsA, statsB) {
+  // Get population data
+  const popA = getPopulation(filterA);
+  const popB = getPopulation(filterB);
+  
+  if (!popA || !popB) return null;
+  
+  // Calculate per-capita rates (per million)
+  const rateA = (statsA.incidents / popA.population) * 1000000;
+  const rateB = (statsB.incidents / popB.population) * 1000000;
+  
+  const ratio = rateA > rateB ? (rateA / rateB) : (rateB / rateA);
+  const higherGroup = rateA > rateB ? filterA.value : filterB.value;
+  const lowerGroup = rateA > rateB ? filterB.value : filterA.value;
+  
+  return {
+    groupARate: rateA.toFixed(2),
+    groupBRate: rateB.toFixed(2),
+    ratio: ratio.toFixed(1),
+    conclusion: `<strong>${higherGroup}</strong> individuals commit school shootings at <strong>${ratio.toFixed(1)}×</strong> the per-capita rate of <strong>${lowerGroup}</strong> individuals.`
+  };
+}
+
+function getPopulation(filter) {
+  switch (filter.category) {
+    case 'gender':
+      return US_POPULATION.byGender[filter.value];
+    case 'trans':
+      return US_POPULATION.byTransStatus[filter.value];
+    case 'race':
+      return US_POPULATION.byRace[filter.value];
+    case 'age':
+      // Approximate US population by age groups
+      return filter.value === 'Under 21' 
+        ? { population: 84000000 } // Rough estimate
+        : { population: 247000000 };
+    case 'country':
+      return filter.value === 'US' 
+        ? { population: 331449281 }
+        : { population: 7500000000 }; // World population minus US
+    default:
+      return null;
+  }
 }
 
 // ========== STATS ==========
@@ -1438,21 +1233,15 @@ function updateStats(data) {
   const injured = data.reduce((s, d) => s + (d.injured || 0), 0);
   const countries = new Set(data.map(d => d.country)).size;
   
-  if (timelineAnimating) {
-    animateNumber('total-incidents', data.length, 100);
-    animateNumber('total-killed', killed, 100);
-    animateNumber('total-injured', injured, 100);
-    animateNumber('total-countries', countries, 100);
-  } else {
-    animateNumber('total-incidents', data.length);
-    animateNumber('total-killed', killed);
-    animateNumber('total-injured', injured);
-    animateNumber('total-countries', countries);
-  }
+  animateNumber('total-incidents', data.length);
+  animateNumber('total-killed', killed);
+  animateNumber('total-injured', injured);
+  animateNumber('total-countries', countries);
 }
 
-function animateNumber(id, target, duration = 1000) {
+function animateNumber(id, target) {
   const el = document.getElementById(id);
+  const duration = 1000;
   const start = parseInt(el.textContent) || 0;
   const startTime = performance.now();
   
@@ -1469,7 +1258,7 @@ function animateNumber(id, target, duration = 1000) {
 function buildDemographics() {
   const usData = INCIDENTS.filter(d => d.country === 'US' && d.perp);
   
-  // Gender breakdown
+  // Gender
   const genders = {};
   usData.forEach(d => {
     const g = d.perp.gender || 'Unknown';
@@ -1481,71 +1270,49 @@ function buildDemographics() {
   document.getElementById('male-pct').textContent = malePct + '%';
   document.getElementById('female-pct').textContent = femalePct + '%';
   
-  // Trans vs Cis detailed comparison
-  buildTransComparison(usData);
-  
-  // Race bars
-  buildRaceBars(usData, total);
-  
-  // Per-capita analysis
-  buildPerCapitaAnalysis(usData);
-  
-  // Age distribution
-  buildAgeDistribution(usData, total);
-}
-
-function buildTransComparison(usData) {
-  const container = document.getElementById('trans-comparison-detailed');
-  const transCount = usData.filter(d => d.perp.cisTrans === 'Transgender').length;
-  const cisCount = usData.filter(d => d.perp.cisTrans === 'Cisgender').length;
-  const unknownCount = usData.length - transCount - cisCount;
-  
-  const transPctShooters = (transCount / usData.length * 100).toFixed(1);
-  const cisPctShooters = (cisCount / usData.length * 100).toFixed(1);
-  
+  // Trans vs Cis comparison
+  const transContainer = document.getElementById('trans-comparison');
+  const usPerps = usData.length;
+  const transCount = usData.filter(d => d.perp.cisTrans === 'Transgender' || d.perp.gender === 'Transgender Male').length;
+  const cisCount = usPerps - transCount;
+  const transPctShooters = (transCount / usPerps * 100).toFixed(1);
+  const cisPctShooters = (cisCount / usPerps * 100).toFixed(1);
   const transPctPop = US_POPULATION.byTransStatus['Transgender'].pct;
   const cisPctPop = US_POPULATION.byTransStatus['Cisgender'].pct;
   
   // Per-capita rates
   const transRate = (transCount / US_POPULATION.byTransStatus['Transgender'].pop) * 1000000;
   const cisRate = (cisCount / US_POPULATION.byTransStatus['Cisgender'].pop) * 1000000;
-  const ratio = cisRate / (transRate || 0.001);
+  const cisToTransRatio = cisRate / (transRate || 0.001);
   
-  container.innerHTML = `
-    <div class="trans-comparison">
-      <div class="comparison-block">
-        <div class="big-number cis-number">${cisCount}</div>
-        <div class="comparison-label">Cisgender Perpetrators</div>
-        <div style="font-size: 12px; color: #888; margin-top: 8px;">
-          ${cisPctShooters}% of incidents<br>
-          ${cisPctPop}% of population
-        </div>
-      </div>
-      <div class="comparison-block">
-        <div class="big-number trans-number">${transCount}</div>
-        <div class="comparison-label">Transgender Perpetrators</div>
-        <div style="font-size: 12px; color: #888; margin-top: 8px;">
-          ${transPctShooters}% of incidents<br>
-          ${transPctPop}% of population
-        </div>
-      </div>
+  transContainer.innerHTML = `
+    <div class="callout" style="border-left-color:#ff2d2d;margin-bottom:16px">
+      <span class="big-num">${cisCount} vs ${transCount}</span>
+      <strong>Cisgender vs transgender perpetrators</strong> in this dataset of US school shootings.
+      Trans people are <strong>${transPctPop}%</strong> of the population but <strong>${transPctShooters}%</strong> of school shooters.
     </div>
-    
-    <div class="callout" style="margin-top: 16px;">
-      Despite making up <strong>${transPctPop}%</strong> of the US population, transgender people commit 
-      <strong>${transPctShooters}%</strong> of school shootings in this dataset. 
-      Cisgender people commit school shootings at <span class="big-num">${ratio.toFixed(1)}×</span> 
-      the per-capita rate of transgender people.
-      <br><br>
-      <em style="color:#666;font-size:11px;">
-        Note: ${unknownCount} incidents lack clear cisgender/transgender classification and are excluded from this analysis.
-        Analysis limited to incidents with demographic data available.
-      </em>
+    <div class="demo-bar-row">
+      <div class="demo-bar-label">
+        <span class="name">Cisgender</span>
+        <span class="value">${cisPctShooters}% of shooters · ${cisPctPop}% of population</span>
+      </div>
+      <div class="demo-bar"><div class="demo-bar-fill" style="width:100%;background:#ff2d2d"></div></div>
+    </div>
+    <div class="demo-bar-row">
+      <div class="demo-bar-label">
+        <span class="name">Transgender</span>
+        <span class="value">${transPctShooters}% of shooters · ${transPctPop}% of population</span>
+      </div>
+      <div class="demo-bar"><div class="demo-bar-fill" style="width:${transCount/cisCount*100}%;background:#00ccff"></div></div>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      Despite making up <strong>${transPctPop}%</strong> of the population, trans people commit <strong>${transPctShooters}%</strong> of school shootings. 
+      Cisgender people commit school shootings at <span class="big-num">${cisToTransRatio.toFixed(0)}×</span> the per-capita rate of transgender people.
+      <br><br><em style="color:#666;font-size:11px">Sources: Gun Violence Archive (2018-2023: 2,826 cis vs 3 trans mass shootings); Pew Research (trans population ~1.6%)</em>
     </div>
   `;
-}
 
-function buildRaceBars(usData, total) {
+  // Race bars
   const races = {};
   usData.forEach(d => {
     const r = d.perp.race || 'Unknown';
@@ -1567,7 +1334,6 @@ function buildRaceBars(usData, total) {
   const sortedRaces = Object.entries(races).sort((a,b) => b[1] - a[1]);
   const maxRace = sortedRaces[0]?.[1] || 1;
   
-  raceContainer.innerHTML = '';
   sortedRaces.forEach(([race, count]) => {
     const shooterPct = (count / total * 100).toFixed(1);
     const popPct = US_POPULATION.byRace[race]?.pct || '?';
@@ -1580,52 +1346,47 @@ function buildRaceBars(usData, total) {
         <span class="name">${race}</span>
         <span class="value">${shooterPct}% of shooters · ${popPct}% of population</span>
       </div>
-      <div class="demo-bar">
-        <div class="demo-bar-fill" style="width:${count/maxRace*100}%;background:${color}"></div>
+      <div class="demo-bar" style="display:flex;gap:2px">
+        <div class="demo-bar-fill" style="width:${count/maxRace*100}%;background:${color}" title="Shooter %"></div>
       </div>
     `;
     raceContainer.appendChild(row);
   });
-}
-
-function buildPerCapitaAnalysis(usData) {
+  
+  // Per-capita callouts
   const pcContainer = document.getElementById('percapita-callouts');
-  pcContainer.innerHTML = '';
-  
-  const races = {};
-  usData.forEach(d => {
-    const r = d.perp.race || 'Unknown';
-    if (r) races[r] = (races[r] || 0) + 1;
-  });
-  
   const perCapita = {};
-  Object.entries(races).forEach(([race, count]) => {
+  
+  sortedRaces.forEach(([race, count]) => {
     const pop = US_POPULATION.byRace[race]?.pop;
     if (pop) {
       perCapita[race] = (count / pop) * 1000000; // per million
     }
   });
   
+  // Find reference rate (White)
   const whiteRate = perCapita['White'];
+  
   if (whiteRate) {
-    Object.entries(perCapita).sort((a,b) => b[1] - a[1]).slice(0, 3).forEach(([race, rate]) => {
-      const callout = document.createElement('div');
-      callout.className = 'callout';
-      
+    Object.entries(perCapita).sort((a,b) => b[1] - a[1]).forEach(([race, rate]) => {
       if (race === 'White') {
-        callout.innerHTML = `<strong>White Americans</strong> commit school shootings at a rate of <strong>${rate.toFixed(2)} per million people</strong>.`;
+        const callout = document.createElement('div');
+        callout.className = 'callout';
+        callout.innerHTML = `<strong>White Americans</strong> commit school shootings at a rate of <strong>${rate.toFixed(2)} per million people</strong>. They represent ${US_POPULATION.byRace['White'].pct}% of the population but ${((races['White']||0)/total*100).toFixed(1)}% of school shooters in this dataset.`;
+        pcContainer.appendChild(callout);
       } else {
         const ratio = whiteRate / rate;
         if (ratio > 1 && isFinite(ratio)) {
-          callout.innerHTML = `<strong>White Americans</strong> commit school shootings at <span class="big-num">${ratio.toFixed(1)}×</span> the per-capita rate of <strong>${race} Americans</strong>.`;
+          const callout = document.createElement('div');
+          callout.className = 'callout';
+          callout.innerHTML = `A <strong>White American</strong> in this dataset commits school shootings at <span class="big-num">${ratio.toFixed(1)}×</span> the per-capita rate of <strong>${race} Americans</strong>.`;
+          pcContainer.appendChild(callout);
         }
       }
-      pcContainer.appendChild(callout);
     });
   }
-}
-
-function buildAgeDistribution(usData, total) {
+  
+  // Age distribution
   const ages = { '10-14': 0, '15-17': 0, '18-21': 0, '22-29': 0, '30-39': 0, '40+': 0 };
   usData.forEach(d => {
     const a = parseInt(d.perp.age);
@@ -1639,7 +1400,6 @@ function buildAgeDistribution(usData, total) {
   });
   
   const ageContainer = document.getElementById('age-bars');
-  ageContainer.innerHTML = '';
   const maxAge = Math.max(...Object.values(ages));
   Object.entries(ages).forEach(([range, count]) => {
     const row = document.createElement('div');
@@ -1659,7 +1419,6 @@ function buildAgeDistribution(usData, total) {
 
 function buildCountryList() {
   const container = document.getElementById('country-list');
-  container.innerHTML = '';
   const sorted = Object.entries(COUNTRY_COUNTS)
     .sort((a,b) => b[1].shootings - a[1].shootings);
   
@@ -1709,7 +1468,6 @@ function showIncident(d) {
         ${d.perp.age ? `<strong>Age:</strong> ${d.perp.age}<br>` : ''}
         ${d.perp.gender ? `<strong>Gender:</strong> ${d.perp.gender}<br>` : ''}
         ${d.perp.race ? `<strong>Race:</strong> ${d.perp.race}<br>` : ''}
-        ${d.perp.cisTrans ? `<strong>Cis/Trans:</strong> ${d.perp.cisTrans}<br>` : ''}
         ${d.perp.religion ? `<strong>Religion:</strong> ${d.perp.religion}<br>` : ''}
       </div>
     </div>` : ''}
@@ -1747,7 +1505,6 @@ function applyFilters() {
   const country = document.getElementById('filter-country').value;
   const race = document.getElementById('filter-race').value;
   const gender = document.getElementById('filter-gender').value;
-  const cisTrans = document.getElementById('filter-cistrans').value;
   const yearFrom = parseInt(document.getElementById('filter-year-from').value) || 0;
   const yearTo = parseInt(document.getElementById('filter-year-to').value) || 9999;
   const type = document.getElementById('filter-type').value;
@@ -1757,19 +1514,15 @@ function applyFilters() {
     if (country && d.country !== country) return false;
     if (race && d.perp?.race !== race) return false;
     if (gender && d.perp?.gender !== gender) return false;
-    if (cisTrans && d.perp?.cisTrans !== cisTrans) return false;
     if (year < yearFrom || year > yearTo) return false;
     if (type && d.type !== type) return false;
     return true;
   });
   
-  globe.pointsData(getFilteredDataByYear());
-  updateStats(getFilteredDataByYear());
+  updateGlobeColors();
+  updateStats(filteredData);
+  updateComparisonStats();
   document.getElementById('filtered-count').textContent = filteredData.length;
-  
-  if (comparisonMode) {
-    updateComparisonStats();
-  }
 }
 
 // ========== UI HELPERS ==========
@@ -1793,16 +1546,7 @@ function toggleMethodology() {
 }
 
 function formatDate(dateStr) {
-  // Handle different date formats
-  let d;
-  if (dateStr.includes('/')) {
-    // Convert "4/20/1999" to proper date
-    const parts = dateStr.split('/');
-    d = new Date(parts[2], parts[0] - 1, parts[1]);
-  } else {
-    // ISO format "1999-04-20"
-    d = new Date(dateStr + 'T00:00:00');
-  }
+  const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
 }
 

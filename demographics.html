@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Shooting Demographics - The Data Behind the Crisis</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 40px 0;
+  border-bottom: 2px solid #ff2d2d;
+}
+
+.header h1 {
+  font-size: 48px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.header h1 span {
+  color: #ff2d2d;
+}
+
+.header .subtitle {
+  font-size: 18px;
+  color: #999;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Featured Section - Trans vs Cis */
+.featured {
+  background: linear-gradient(135deg, rgba(255,45,45,0.1) 0%, rgba(255,45,45,0.05) 100%);
+  border: 2px solid #ff2d2d;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+.featured h2 {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ff2d2d;
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.trans-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin: 40px 0;
+}
+
+.comparison-block {
+  text-align: center;
+  padding: 32px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.big-number {
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.cis-number { color: #ff2d2d; }
+.trans-number { color: #00ccff; }
+
+.comparison-label {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.comparison-detail {
+  font-size: 14px;
+  color: #888;
+}
+
+.featured-callout {
+  background: rgba(255,45,45,0.1);
+  border-left: 4px solid #ff2d2d;
+  padding: 24px;
+  margin-top: 32px;
+  border-radius: 8px;
+}
+
+.featured-callout .ratio {
+  font-size: 48px;
+  font-weight: 900;
+  color: #ff2d2d;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.source-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* Grid Layout */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.chart-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.chart-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff2d2d;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.chart-subtitle {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* SVG Styling */
+.chart svg {
+  width: 100%;
+  height: auto;
+}
+
+.bar {
+  transition: opacity 0.3s;
+}
+
+.bar:hover {
+  opacity: 0.8;
+}
+
+.axis {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  fill: #888;
+}
+
+.axis-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: #ccc;
+}
+
+.gridline {
+  stroke: #333;
+  stroke-dasharray: 2,2;
+  stroke-width: 1;
+}
+
+.tooltip {
+  position: absolute;
+  background: rgba(12,12,12,0.95);
+  border: 1px solid #ff2d2d;
+  border-radius: 8px;
+  padding: 12px 16px;
+  pointer-events: none;
+  z-index: 1000;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Callout boxes */
+.callout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.likelihood-callout {
+  background: rgba(255,45,45,0.08);
+  border-left: 4px solid #ff2d2d;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.likelihood-callout .multiplier {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ff2d2d;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.likelihood-callout .description {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Stats boxes */
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  margin: 32px 0;
+  padding: 24px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ff2d2d;
+  display: block;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .trans-comparison {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .callout-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header h1 {
+    font-size: 32px;
+  }
+  
+  .big-number {
+    font-size: 48px;
+  }
+  
+  .featured h2 {
+    font-size: 24px;
+  }
+}
+
+/* Loading animation */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.pulse {
+  width: 20px;
+  height: 20px;
+  background: #ff2d2d;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(2); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>School Shooting <span>Demographics</span></h1>
+    <div class="subtitle">The data behind America's school shooting crisis. These are not just statistics—they represent lives lost, families destroyed, and communities shattered.</div>
+  </div>
+
+  <!-- Featured: Trans vs Cis Comparison -->
+  <div class="featured">
+    <h2>Trans vs Cisgender Perpetrators</h2>
+    <div class="trans-comparison">
+      <div class="comparison-block">
+        <div class="big-number cis-number" id="cis-count">2,826</div>
+        <div class="comparison-label">Cisgender perpetrators</div>
+        <div class="comparison-detail">Gun Violence Archive (2018-2023)</div>
+      </div>
+      <div class="comparison-block">
+        <div class="big-number trans-number" id="trans-count">3</div>
+        <div class="comparison-label">Transgender perpetrators</div>
+        <div class="comparison-detail">Same period and source</div>
+      </div>
+    </div>
+    <div class="featured-callout">
+      <span class="ratio">942×</span>
+      <strong>Cisgender people commit mass shootings at 942× the rate of transgender people</strong> when adjusted for population size. 
+      Trans people make up 1.6% of the population but only 0.1% of mass shooters.
+      <div class="source-note">
+        Sources: Gun Violence Archive (2018-2023), Pew Research Center (trans population data)
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Charts Grid -->
+  <div class="charts-grid">
+    
+    <!-- Race Treemap -->
+    <div class="chart-section">
+      <h3 class="chart-title">Race: Shooters vs Population</h3>
+      <div class="chart-subtitle">Proportional area shows the massive overrepresentation of white males</div>
+      <div id="race-treemap" class="chart">
+        <div class="loading"><div class="pulse"></div></div>
+      </div>
+    </div>
+
+    <!-- Gender Donut -->
+    <div class="chart-section">
+      <h3 class="chart-title">Gender Distribution</h3>
+      <div class="chart-subtitle">97.3% of school shooters are male</div>
+      <div id="gender-donut" class="chart">
+        <div class="loading"><div class="pulse"></div></div>
+      </div>
+    </div>
+
+    <!-- Age Histogram -->
+    <div class="chart-section">
+      <h3 class="chart-title">Age Distribution</h3>
+      <div class="chart-subtitle">Peak shooting age: 15-19 years old</div>
+      <div id="age-histogram" class="chart">
+        <div class="loading"><div class="pulse"></div></div>
+      </div>
+    </div>
+
+    <!-- Year Trend -->
+    <div class="chart-section">
+      <h3 class="chart-title">Incidents Over Time</h3>
+      <div class="chart-subtitle">The crisis is accelerating, not improving</div>
+      <div id="year-trend" class="chart">
+        <div class="loading"><div class="pulse"></div></div>
+      </div>
+    </div>
+
+    <!-- Country Comparison -->
+    <div class="chart-section full-width">
+      <h3 class="chart-title">Global Comparison: Shootings per 10 Million People</h3>
+      <div class="chart-subtitle">The United States is an extreme outlier</div>
+      <div id="country-comparison" class="chart">
+        <div class="loading"><div class="pulse"></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Likelihood Callouts -->
+  <div class="callout-grid" id="likelihood-callouts">
+    <!-- Will be populated by JavaScript -->
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <span class="stat-number" id="total-incidents">0</span>
+      <div class="stat-label">Total Incidents Analyzed</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number" id="total-deaths">0</span>
+      <div class="stat-label">Lives Lost</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number" id="us-percentage">0</span>
+      <div class="stat-label">% of Global Incidents in US</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="data.js"></script>
+<script>
+
+// ========== DATA PROCESSING ==========
+
+// Filter US school shooting data with known perpetrator info
+const usIncidents = INCIDENTS.filter(d => d.country === 'US' && d.perp);
+const allIncidents = INCIDENTS;
+
+console.log('Total incidents:', allIncidents.length);
+console.log('US incidents with perp data:', usIncidents.length);
+
+// Calculate basic stats
+const totalDeaths = allIncidents.reduce((sum, d) => sum + (d.killed || 0), 0);
+const usIncidentCount = INCIDENTS.filter(d => d.country === 'US').length;
+const usPercentage = ((usIncidentCount / allIncidents.length) * 100).toFixed(1);
+
+// Animate counters
+function animateCounter(elementId, finalValue, suffix = '') {
+  const element = document.getElementById(elementId);
+  const startValue = 0;
+  const duration = 2000;
+  const startTime = performance.now();
+  
+  function updateCounter(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const currentValue = Math.floor(startValue + (finalValue - startValue) * progress);
+    element.textContent = currentValue.toLocaleString() + suffix;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter);
+    }
+  }
+  requestAnimationFrame(updateCounter);
+}
+
+// Initialize counters
+animateCounter('total-incidents', allIncidents.length);
+animateCounter('total-deaths', totalDeaths);
+animateCounter('us-percentage', parseFloat(usPercentage), '%');
+
+// ========== RACE TREEMAP ==========
+
+function createRaceTreemap() {
+  const container = d3.select('#race-treemap');
+  container.select('.loading').remove();
+  
+  const width = 500;
+  const height = 300;
+  
+  // Count shooters by race
+  const raceData = {};
+  usIncidents.forEach(d => {
+    const race = d.perp.race || 'Unknown';
+    raceData[race] = (raceData[race] || 0) + 1;
+  });
+  
+  // Prepare data for treemap - side by side comparison
+  const shooterData = Object.entries(raceData).map(([race, count]) => ({
+    name: race,
+    value: count,
+    type: 'shooter',
+    percentage: (count / usIncidents.length * 100).toFixed(1)
+  }));
+  
+  const populationData = Object.entries(US_POPULATION.byRace).map(([race, data]) => ({
+    name: race,
+    value: data.pct,
+    type: 'population',
+    percentage: data.pct.toFixed(1)
+  }));
+  
+  const svg = container.append('svg')
+    .attr('width', width)
+    .attr('height', height);
+    
+  // Colors for races
+  const raceColors = {
+    'White': '#ff2d2d',
+    'Black': '#ff6b35', 
+    'Latino': '#ffaa00',
+    'Asian': '#00ccff',
+    'Native American': '#33ff99',
+    'Mixed': '#cc66ff',
+    'Unknown': '#666'
+  };
+  
+  // Create two treemaps side by side
+  const treemapWidth = width / 2 - 20;
+  const treemap = d3.treemap().size([treemapWidth, height - 60]).padding(2);
+  
+  // Shooters treemap
+  const shooterHierarchy = d3.hierarchy({children: shooterData}).sum(d => d.value);
+  treemap(shooterHierarchy);
+  
+  const shooterGroup = svg.append('g').attr('transform', 'translate(0,30)');
+  
+  shooterGroup.selectAll('rect')
+    .data(shooterHierarchy.leaves())
+    .enter().append('rect')
+    .attr('x', d => d.x0)
+    .attr('y', d => d.y0)
+    .attr('width', d => d.x1 - d.x0)
+    .attr('height', d => d.y1 - d.y0)
+    .attr('fill', d => raceColors[d.data.name] || '#666')
+    .attr('stroke', '#0a0a0a')
+    .attr('stroke-width', 2);
+    
+  shooterGroup.selectAll('text')
+    .data(shooterHierarchy.leaves())
+    .enter().append('text')
+    .attr('x', d => (d.x0 + d.x1) / 2)
+    .attr('y', d => (d.y0 + d.y1) / 2)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .style('font-size', '10px')
+    .style('font-weight', '600')
+    .style('fill', '#fff')
+    .text(d => d.data.value > 2 ? `${d.data.name}\n${d.data.percentage}%` : '');
+  
+  // Population treemap
+  const populationHierarchy = d3.hierarchy({children: populationData}).sum(d => d.value);
+  treemap(populationHierarchy);
+  
+  const populationGroup = svg.append('g').attr('transform', `translate(${width/2 + 10},30)`);
+  
+  populationGroup.selectAll('rect')
+    .data(populationHierarchy.leaves())
+    .enter().append('rect')
+    .attr('x', d => d.x0)
+    .attr('y', d => d.y0) 
+    .attr('width', d => d.x1 - d.x0)
+    .attr('height', d => d.y1 - d.y0)
+    .attr('fill', d => raceColors[d.data.name] || '#666')
+    .attr('opacity', 0.6)
+    .attr('stroke', '#0a0a0a')
+    .attr('stroke-width', 2);
+    
+  populationGroup.selectAll('text')
+    .data(populationHierarchy.leaves())
+    .enter().append('text')
+    .attr('x', d => (d.x0 + d.x1) / 2)
+    .attr('y', d => (d.y0 + d.y1) / 2)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .style('font-size', '10px')
+    .style('font-weight', '600')
+    .style('fill', '#fff')
+    .text(d => d.data.value > 5 ? `${d.data.name}\n${d.data.percentage}%` : '');
+  
+  // Labels
+  svg.append('text')
+    .attr('x', treemapWidth / 2)
+    .attr('y', 20)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '14px')
+    .style('font-weight', '600')
+    .style('fill', '#ff2d2d')
+    .text('Shooters');
+    
+  svg.append('text')
+    .attr('x', width/2 + 10 + treemapWidth / 2)
+    .attr('y', 20)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '14px')
+    .style('font-weight', '600')
+    .style('fill', '#ccc')
+    .text('US Population');
+}
+
+// ========== GENDER DONUT ==========
+
+function createGenderDonut() {
+  const container = d3.select('#gender-donut');
+  container.select('.loading').remove();
+  
+  const width = 300;
+  const height = 300;
+  const radius = Math.min(width, height) / 2 - 20;
+  
+  // Count by gender
+  const genderData = {};
+  usIncidents.forEach(d => {
+    const gender = d.perp.gender || 'Unknown';
+    genderData[gender] = (genderData[gender] || 0) + 1;
+  });
+  
+  const data = Object.entries(genderData).map(([gender, count]) => ({
+    gender,
+    count,
+    percentage: (count / usIncidents.length * 100).toFixed(1)
+  }));
+  
+  const svg = container.append('svg')
+    .attr('width', width)
+    .attr('height', height);
+    
+  const g = svg.append('g')
+    .attr('transform', `translate(${width/2},${height/2})`);
+  
+  const color = d3.scaleOrdinal()
+    .domain(data.map(d => d.gender))
+    .range(['#ff2d2d', '#ff8888', '#666']);
+  
+  const pie = d3.pie().value(d => d.count);
+  const arc = d3.arc().innerRadius(radius * 0.5).outerRadius(radius);
+  
+  const arcs = g.selectAll('arc')
+    .data(pie(data))
+    .enter().append('g')
+    .attr('class', 'arc');
+    
+  arcs.append('path')
+    .attr('d', arc)
+    .attr('fill', d => color(d.data.gender))
+    .attr('stroke', '#0a0a0a')
+    .attr('stroke-width', 2);
+    
+  arcs.append('text')
+    .attr('transform', d => `translate(${arc.centroid(d)})`)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .style('font-size', '14px')
+    .style('font-weight', '600')
+    .style('fill', '#fff')
+    .text(d => d.data.percentage > 5 ? `${d.data.percentage}%` : '');
+    
+  // Center text
+  g.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('y', -10)
+    .style('font-size', '36px')
+    .style('font-weight', '900')
+    .style('fill', '#ff2d2d')
+    .text(`${genderData['Male'] ? ((genderData['Male'] / usIncidents.length) * 100).toFixed(1) : '0'}%`);
+    
+  g.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('y', 15)
+    .style('font-size', '12px')
+    .style('fill', '#888')
+    .text('Male');
+}
+
+// ========== AGE HISTOGRAM ==========
+
+function createAgeHistogram() {
+  const container = d3.select('#age-histogram');
+  container.select('.loading').remove();
+  
+  const margin = {top: 20, right: 20, bottom: 40, left: 40};
+  const width = 400 - margin.left - margin.right;
+  const height = 250 - margin.top - margin.bottom;
+  
+  // Extract ages
+  const ages = usIncidents
+    .map(d => parseInt(d.perp.age))
+    .filter(age => !isNaN(age) && age >= 10 && age <= 70);
+    
+  // Create bins
+  const bins = d3.histogram()
+    .domain([10, 70])
+    .thresholds(12)(ages);
+    
+  const svg = container.append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom);
+    
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+    
+  const x = d3.scaleLinear()
+    .domain([10, 70])
+    .range([0, width]);
+    
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(bins, d => d.length)])
+    .range([height, 0]);
+    
+  // Bars
+  g.selectAll('rect')
+    .data(bins)
+    .enter().append('rect')
+    .attr('x', d => x(d.x0))
+    .attr('y', d => y(d.length))
+    .attr('width', d => x(d.x1) - x(d.x0) - 1)
+    .attr('height', d => height - y(d.length))
+    .attr('fill', '#ff2d2d')
+    .attr('opacity', 0.8);
+    
+  // Normal curve overlay (approximate)
+  const mean = d3.mean(ages);
+  const stdDev = d3.deviation(ages);
+  
+  const line = d3.line()
+    .x(d => x(d.age))
+    .y(d => y(d.density * bins.length * 5)) // Scale to match histogram
+    .curve(d3.curveBasis);
+    
+  const normalData = d3.range(10, 70, 0.5).map(age => {
+    const density = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * 
+                   Math.exp(-0.5 * Math.pow((age - mean) / stdDev, 2));
+    return {age, density};
+  });
+  
+  g.append('path')
+    .datum(normalData)
+    .attr('d', line)
+    .attr('fill', 'none')
+    .attr('stroke', '#00ccff')
+    .attr('stroke-width', 3)
+    .attr('opacity', 0.8);
+    
+  // Axes
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x).tickFormat(d => d))
+    .attr('class', 'axis');
+    
+  g.append('g')
+    .call(d3.axisLeft(y))
+    .attr('class', 'axis');
+    
+  // Axis labels
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 35)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'axis-label')
+    .text('Age');
+    
+  g.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('x', -height / 2)
+    .attr('y', -25)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'axis-label')
+    .text('Count');
+}
+
+// ========== YEAR TREND ==========
+
+function createYearTrend() {
+  const container = d3.select('#year-trend');
+  container.select('.loading').remove();
+  
+  const margin = {top: 20, right: 20, bottom: 40, left: 40};
+  const width = 400 - margin.left - margin.right;
+  const height = 250 - margin.top - margin.bottom;
+  
+  // Count incidents by year
+  const yearData = {};
+  allIncidents.forEach(d => {
+    const year = parseInt(d.date.substring(0, 4));
+    if (year >= 1990) { // Focus on recent decades
+      yearData[year] = (yearData[year] || 0) + 1;
+    }
+  });
+  
+  const data = Object.entries(yearData)
+    .map(([year, count]) => ({year: parseInt(year), count}))
+    .sort((a, b) => a.year - b.year);
+    
+  const svg = container.append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom);
+    
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+    
+  const x = d3.scaleLinear()
+    .domain(d3.extent(data, d => d.year))
+    .range([0, width]);
+    
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.count)])
+    .range([height, 0]);
+    
+  // Line
+  const line = d3.line()
+    .x(d => x(d.year))
+    .y(d => y(d.count))
+    .curve(d3.curveMonotoneX);
+    
+  g.append('path')
+    .datum(data)
+    .attr('d', line)
+    .attr('fill', 'none')
+    .attr('stroke', '#ff2d2d')
+    .attr('stroke-width', 3);
+    
+  // Points
+  g.selectAll('circle')
+    .data(data)
+    .enter().append('circle')
+    .attr('cx', d => x(d.year))
+    .attr('cy', d => y(d.count))
+    .attr('r', 4)
+    .attr('fill', '#ff2d2d')
+    .attr('stroke', '#0a0a0a')
+    .attr('stroke-width', 2);
+    
+  // Trend line
+  const regression = calculateLinearRegression(data.map(d => [d.year, d.count]));
+  const trendLine = data.map(d => ({
+    year: d.year,
+    trend: regression.slope * d.year + regression.intercept
+  }));
+  
+  const trendPath = d3.line()
+    .x(d => x(d.year))
+    .y(d => y(d.trend));
+    
+  g.append('path')
+    .datum(trendLine)
+    .attr('d', trendPath)
+    .attr('fill', 'none')
+    .attr('stroke', '#ffaa00')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '5,5')
+    .attr('opacity', 0.8);
+    
+  // Axes
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format('d')))
+    .attr('class', 'axis');
+    
+  g.append('g')
+    .call(d3.axisLeft(y))
+    .attr('class', 'axis');
+    
+  // Labels
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 35)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'axis-label')
+    .text('Year');
+    
+  g.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('x', -height / 2)
+    .attr('y', -25)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'axis-label')
+    .text('Incidents');
+}
+
+function calculateLinearRegression(data) {
+  const n = data.length;
+  const sumX = data.reduce((sum, [x, y]) => sum + x, 0);
+  const sumY = data.reduce((sum, [x, y]) => sum + y, 0);
+  const sumXY = data.reduce((sum, [x, y]) => sum + x * y, 0);
+  const sumXX = data.reduce((sum, [x, y]) => sum + x * x, 0);
+  
+  const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  
+  return {slope, intercept};
+}
+
+// ========== COUNTRY COMPARISON ==========
+
+function createCountryComparison() {
+  const container = d3.select('#country-comparison');
+  container.select('.loading').remove();
+  
+  const margin = {top: 20, right: 50, bottom: 40, left: 120};
+  const width = 800 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+  
+  // Calculate rates per 10 million
+  const countryRates = Object.entries(COUNTRY_COUNTS)
+    .map(([code, data]) => ({
+      country: data.label,
+      rate: (data.shootings / data.population) * 10000000,
+      shootings: data.shootings
+    }))
+    .filter(d => d.shootings > 0)
+    .sort((a, b) => b.rate - a.rate)
+    .slice(0, 15); // Top 15
+    
+  const svg = container.append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom);
+    
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+    
+  const x = d3.scaleLinear()
+    .domain([0, d3.max(countryRates, d => d.rate)])
+    .range([0, width]);
+    
+  const y = d3.scaleBand()
+    .domain(countryRates.map(d => d.country))
+    .range([0, height])
+    .padding(0.1);
+    
+  // Bars
+  g.selectAll('rect')
+    .data(countryRates)
+    .enter().append('rect')
+    .attr('x', 0)
+    .attr('y', d => y(d.country))
+    .attr('width', d => x(d.rate))
+    .attr('height', y.bandwidth())
+    .attr('fill', d => d.country === 'United States' ? '#ff2d2d' : '#666')
+    .attr('opacity', 0.8);
+    
+  // Values
+  g.selectAll('.value-label')
+    .data(countryRates)
+    .enter().append('text')
+    .attr('class', 'value-label')
+    .attr('x', d => x(d.rate) + 5)
+    .attr('y', d => y(d.country) + y.bandwidth() / 2)
+    .attr('dominant-baseline', 'middle')
+    .style('font-size', '12px')
+    .style('font-weight', '600')
+    .style('fill', '#ccc')
+    .text(d => d.rate.toFixed(2));
+    
+  // Axes
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x))
+    .attr('class', 'axis');
+    
+  g.append('g')
+    .call(d3.axisLeft(y))
+    .attr('class', 'axis');
+    
+  // Label
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 35)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'axis-label')
+    .text('Rate per 10 million people');
+}
+
+// ========== LIKELIHOOD CALLOUTS ==========
+
+function createLikelihoodCallouts() {
+  const container = d3.select('#likelihood-callouts');
+  
+  // Calculate per-capita rates by race
+  const raceData = {};
+  usIncidents.forEach(d => {
+    const race = d.perp.race;
+    if (race && US_POPULATION.byRace[race]) {
+      raceData[race] = (raceData[race] || 0) + 1;
+    }
+  });
+  
+  const rates = {};
+  Object.entries(raceData).forEach(([race, count]) => {
+    const population = US_POPULATION.byRace[race].pop;
+    rates[race] = (count / population) * 1000000; // per million
+  });
+  
+  const whiteRate = rates['White'];
+  const callouts = [];
+  
+  Object.entries(rates).forEach(([race, rate]) => {
+    if (race !== 'White' && rate < whiteRate) {
+      const multiplier = (whiteRate / rate).toFixed(1);
+      if (multiplier > 1 && isFinite(multiplier)) {
+        callouts.push({
+          race,
+          multiplier,
+          description: `A white American commits school shootings at ${multiplier}× the per-capita rate of ${race} Americans.`
+        });
+      }
+    }
+  });
+  
+  // Add overall white stats
+  callouts.unshift({
+    race: 'White Overall',
+    multiplier: `${((raceData['White'] / usIncidents.length) * 100).toFixed(1)}%`,
+    description: `White Americans represent ${US_POPULATION.byRace['White'].pct}% of the population but ${((raceData['White'] / usIncidents.length) * 100).toFixed(1)}% of school shooters.`
+  });
+  
+  callouts.forEach(callout => {
+    const div = container.append('div')
+      .attr('class', 'likelihood-callout');
+      
+    div.append('span')
+      .attr('class', 'multiplier')
+      .text(callout.multiplier);
+      
+    div.append('div')
+      .attr('class', 'description')
+      .text(callout.description);
+  });
+}
+
+// ========== INITIALIZE ALL CHARTS ==========
+
+setTimeout(() => {
+  createRaceTreemap();
+  createGenderDonut();  
+  createAgeHistogram();
+  createYearTrend();
+  createCountryComparison();
+  createLikelihoodCallouts();
+}, 500);
+
+</script>
+
+</body>
+</html>
