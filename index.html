@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Every School Shooting. Ever.</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#globe-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+/* Header overlay */
+#header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  padding: 20px 30px;
+  background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 60%, transparent 100%);
+  pointer-events: none;
+}
+#header h1 {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #fff;
+  pointer-events: auto;
+}
+#header h1 span { color: #ff2d2d; }
+#header .subtitle {
+  font-size: 13px;
+  font-weight: 300;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* Stats bar */
+#stats-bar {
+  position: absolute;
+  top: 80px; left: 30px;
+  z-index: 10;
+  display: flex;
+  gap: 24px;
+}
+.stat-box {
+  text-align: center;
+}
+.stat-number {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ff2d2d;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* Side panel */
+#panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: 380px; height: 100%;
+  z-index: 20;
+  background: rgba(12,12,12,0.97);
+  border-left: 1px solid rgba(255,45,45,0.15);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(20px);
+}
+#panel.open { transform: translateX(0); }
+#panel-close {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: none; border: none;
+  color: #666; font-size: 24px;
+  cursor: pointer;
+  z-index: 21;
+}
+#panel-close:hover { color: #ff2d2d; }
+
+/* Panel tabs */
+.panel-tabs {
+  display: flex;
+  border-bottom: 1px solid #222;
+  padding: 15px 20px 0;
+}
+.panel-tab {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.panel-tab.active {
+  color: #ff2d2d;
+  border-bottom-color: #ff2d2d;
+}
+
+.panel-content {
+  padding: 20px;
+  display: none;
+}
+.panel-content.active { display: block; }
+
+/* Incident detail */
+.incident-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.incident-meta {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 16px;
+}
+.incident-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.incident-stat {
+  background: rgba(255,45,45,0.08);
+  border: 1px solid rgba(255,45,45,0.15);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.incident-stat .num {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ff2d2d;
+}
+.incident-stat .lbl {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Demographics section */
+.demo-section {
+  margin-bottom: 24px;
+}
+.demo-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ff2d2d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #222;
+}
+.demo-bar-row {
+  margin-bottom: 10px;
+}
+.demo-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.demo-bar-label .name { color: #ccc; }
+.demo-bar-label .value { color: #ff2d2d; font-weight: 600; }
+.demo-bar {
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.demo-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+/* Comparison callouts */
+.callout {
+  background: rgba(255,45,45,0.06);
+  border-left: 3px solid #ff2d2d;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ccc;
+}
+.callout strong { color: #fff; }
+.callout .big-num {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ff2d2d;
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* Filter controls */
+.filter-group {
+  margin-bottom: 16px;
+}
+.filter-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.filter-group select, .filter-group input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 13px;
+  font-family: inherit;
+}
+.filter-group select:focus, .filter-group input:focus {
+  outline: none;
+  border-color: #ff2d2d;
+}
+
+/* Toggle button */
+#panel-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 15;
+  background: rgba(255,45,45,0.15);
+  border: 1px solid rgba(255,45,45,0.3);
+  color: #ff2d2d;
+  padding: 12px 8px;
+  border-radius: 6px 0 0 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+#panel-toggle:hover {
+  background: rgba(255,45,45,0.3);
+}
+#panel-toggle.hidden { display: none; }
+
+/* Country comparison */
+.country-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+.country-row .flag { width: 24px; margin-right: 10px; font-size: 16px; }
+.country-row .cname { flex: 1; font-size: 13px; color: #ccc; }
+.country-row .ccount { font-size: 16px; font-weight: 700; color: #ff2d2d; width: 50px; text-align: right; }
+.country-row .crate { font-size: 11px; color: #666; width: 80px; text-align: right; }
+
+/* Methodology */
+#methodology {
+  position: absolute;
+  bottom: 20px; left: 30px;
+  z-index: 10;
+}
+#methodology button {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #333;
+  color: #666;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+}
+#methodology button:hover { color: #ccc; border-color: #666; }
+#methodology-content {
+  display: none;
+  position: absolute;
+  bottom: 36px; left: 0;
+  width: 500px;
+  background: rgba(12,12,12,0.97);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #999;
+  max-height: 400px;
+  overflow-y: auto;
+  backdrop-filter: blur(20px);
+}
+#methodology-content h4 {
+  color: #ccc;
+  font-size: 13px;
+  margin: 12px 0 6px;
+}
+#methodology-content h4:first-child { margin-top: 0; }
+#methodology-content a { color: #ff2d2d; }
+
+/* Tooltip */
+#tooltip {
+  position: absolute;
+  z-index: 30;
+  background: rgba(12,12,12,0.95);
+  border: 1px solid rgba(255,45,45,0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  pointer-events: none;
+  display: none;
+  max-width: 280px;
+  backdrop-filter: blur(10px);
+}
+#tooltip .tt-name { font-size: 14px; font-weight: 700; color: #fff; }
+#tooltip .tt-date { font-size: 11px; color: #888; margin-bottom: 6px; }
+#tooltip .tt-stats { font-size: 12px; color: #ccc; }
+#tooltip .tt-stats span { color: #ff2d2d; font-weight: 700; }
+
+/* Gender comparison */
+.gender-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+}
+.gender-pct {
+  font-size: 48px;
+  font-weight: 900;
+  color: #ff2d2d;
+  line-height: 1;
+  min-width: 120px;
+}
+.gender-label {
+  font-size: 13px;
+  color: #888;
+}
+.gender-label strong { color: #ccc; }
+
+/* Loading */
+#loading {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  flex-direction: column;
+  transition: opacity 0.5s;
+}
+#loading.fade { opacity: 0; pointer-events: none; }
+#loading .pulse {
+  width: 20px; height: 20px;
+  background: #ff2d2d;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(2.5); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#loading p {
+  margin-top: 20px;
+  color: #666;
+  font-size: 13px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="pulse"></div>
+  <p>Loading data...</p>
+</div>
+
+<div id="globe-container"></div>
+
+<div id="header">
+  <h1>Every School Shooting. <span>Ever.</span></h1>
+  <div class="subtitle">Interactive visualization of school &amp; campus shootings worldwide. Click any point to explore.</div>
+</div>
+
+<div id="stats-bar">
+  <div class="stat-box">
+    <div class="stat-number" id="total-incidents">0</div>
+    <div class="stat-label">Incidents</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number" id="total-killed">0</div>
+    <div class="stat-label">Killed</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number" id="total-injured">0</div>
+    <div class="stat-label">Injured</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number" id="total-countries">0</div>
+    <div class="stat-label">Countries</div>
+  </div>
+</div>
+
+<button id="panel-toggle" onclick="togglePanel()">◀ Data</button>
+
+<div id="panel">
+  <button id="panel-close" onclick="togglePanel()">×</button>
+  <div class="panel-tabs">
+    <div class="panel-tab active" data-tab="demographics" onclick="switchTab(this)">Demographics</div>
+    <div class="panel-tab" data-tab="countries" onclick="switchTab(this)">Countries</div>
+    <div class="panel-tab" data-tab="incident" onclick="switchTab(this)">Incident</div>
+    <div class="panel-tab" data-tab="filters" onclick="switchTab(this)">Filter</div>
+  </div>
+
+  <!-- Demographics Tab -->
+  <div class="panel-content active" id="tab-demographics">
+    <div class="demo-section">
+      <h3>Gender of Perpetrators (US School Shootings)</h3>
+      <div class="gender-block">
+        <div class="gender-pct" id="male-pct">--</div>
+        <div class="gender-label"><strong>Male</strong><br>of all school shooters with known gender</div>
+      </div>
+      <div class="gender-block" style="opacity:0.5">
+        <div class="gender-pct" id="female-pct" style="font-size:32px">--</div>
+        <div class="gender-label"><strong>Female</strong></div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>Trans vs Cisgender Perpetrators</h3>
+      <div id="trans-comparison"></div>
+    </div>
+
+    <div class="demo-section">
+      <h3>Race / Ethnicity of Perpetrators vs US Population</h3>
+      <div id="race-bars"></div>
+    </div>
+
+    <div class="demo-section">
+      <h3>Per-Capita Likelihood (US)</h3>
+      <div id="percapita-callouts"></div>
+    </div>
+
+    <div class="demo-section">
+      <h3>Age Distribution</h3>
+      <div id="age-bars"></div>
+    </div>
+  </div>
+
+  <!-- Countries Tab -->
+  <div class="panel-content" id="tab-countries">
+    <div class="demo-section">
+      <h3>School Shootings by Country</h3>
+      <div id="country-list"></div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <strong>The United States accounts for the vast majority of school shootings worldwide.</strong>
+      With 4.2% of the world's population, the US has had more school shootings than all other countries combined.
+    </div>
+  </div>
+
+  <!-- Incident Tab -->
+  <div class="panel-content" id="tab-incident">
+    <p style="color:#666;font-size:13px">Click a point on the globe to view incident details.</p>
+    <div id="incident-detail"></div>
+  </div>
+
+  <!-- Filters Tab -->
+  <div class="panel-content" id="tab-filters">
+    <div class="filter-group">
+      <label>Country</label>
+      <select id="filter-country" onchange="applyFilters()">
+        <option value="">All Countries</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Perpetrator Race</label>
+      <select id="filter-race" onchange="applyFilters()">
+        <option value="">All</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Perpetrator Gender</label>
+      <select id="filter-gender" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Transgender Male">Transgender Male</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Year Range</label>
+      <div style="display:flex;gap:8px">
+        <input type="number" id="filter-year-from" placeholder="From" min="1960" max="2026" onchange="applyFilters()">
+        <input type="number" id="filter-year-to" placeholder="To" min="1960" max="2026" onchange="applyFilters()">
+      </div>
+    </div>
+    <div class="filter-group">
+      <label>School Type</label>
+      <select id="filter-type" onchange="applyFilters()">
+        <option value="">All Types</option>
+      </select>
+    </div>
+    <div style="margin-top:16px">
+      <div class="stat-label">Filtered Results</div>
+      <div class="stat-number" id="filtered-count" style="font-size:24px">0</div>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-name"></div>
+  <div class="tt-date"></div>
+  <div class="tt-stats"></div>
+</div>
+
+<div id="methodology">
+  <button onclick="toggleMethodology()">Methodology & Sources</button>
+  <div id="methodology-content">
+    <h4>Data Sources</h4>
+    <p>This visualization compiles data from multiple verified sources:</p>
+    <ul style="margin-left:16px">
+      <li><a href="https://k12ssdb.org" target="_blank">K-12 School Shooting Database</a> - Every US K-12 school shooting since 1970</li>
+      <li><a href="https://www.theviolenceproject.org" target="_blank">The Violence Project</a> - Mass Shooter Database with demographic data</li>
+      <li><a href="https://www.gunviolencearchive.org" target="_blank">Gun Violence Archive</a> - Near real-time US gun violence data</li>
+      <li><a href="https://en.wikipedia.org/wiki/List_of_school_shootings_in_the_United_States" target="_blank">Wikipedia</a> - Comprehensive lists of school shootings globally</li>
+      <li><a href="https://worldpopulationreview.com/country-rankings/school-shootings-by-country" target="_blank">World Population Review</a> - Country comparison data</li>
+    </ul>
+
+    <h4>Definitions</h4>
+    <p><strong>School shooting:</strong> An incident where a firearm was discharged at a school, university, or educational institution, resulting in casualties.</p>
+    <p><strong>Perpetrator demographics:</strong> Race/ethnicity classifications follow US Census categories. Where perpetrators have mixed heritage, they are classified as "Mixed" unless self-identified otherwise.</p>
+
+    <h4>Limitations</h4>
+    <ul style="margin-left:16px">
+      <li>This visualization shows major incidents with detailed data. The K-12 SSDB documents 2,400+ incidents in the US alone; most are lower-casualty events not individually mapped here.</li>
+      <li>International data is less complete than US data due to reporting differences.</li>
+      <li>Religion data is available for fewer than 10% of perpetrators and is excluded from demographic analysis.</li>
+      <li>Some historical coordinates are approximate.</li>
+      <li>Terrorist attacks at schools (Beslan, Peshawar, Garissa) are included but noted separately as they differ in motive and scale from individual school shootings.</li>
+    </ul>
+
+    <h4>Per-Capita Methodology</h4>
+    <p>Per-capita comparisons use 2020 US Census population data. Rates are calculated as (number of perpetrators of group / population of group) normalized per million. These rates reflect the dataset's incidents, not all gun violence.</p>
+
+    <h4>Note on Completeness</h4>
+    <p>No dataset of school shootings is fully complete. This visualization prioritizes accuracy over comprehensiveness. If you notice an error or missing incident, the data is open for correction.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/globe.gl@2.31.0/dist/globe.gl.min.js"></script>
+<script src="data.js"></script>
+<script>
+// ========== INITIALIZATION ==========
+let globe;
+let filteredData = [...INCIDENTS];
+let selectedIncident = null;
+
+function init() {
+  // Build globe
+  globe = Globe()
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+    .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    .backgroundColor('#0a0a0a')
+    .showAtmosphere(true)
+    .atmosphereColor('#ff2d2d')
+    .atmosphereAltitude(0.15)
+    .pointsData(INCIDENTS)
+    .pointLat(d => d.lat)
+    .pointLng(d => d.lng)
+    .pointAltitude(d => Math.min(0.3, (d.killed || 1) * 0.008))
+    .pointRadius(d => Math.max(0.15, Math.min(0.8, Math.sqrt(d.killed || 1) * 0.12)))
+    .pointColor(d => {
+      const k = d.killed || 0;
+      if (k >= 20) return '#ff0000';
+      if (k >= 10) return '#ff2d2d';
+      if (k >= 5) return '#ff5555';
+      return '#ff8888';
+    })
+    .pointResolution(12)
+    .onPointClick(d => showIncident(d))
+    .onPointHover(d => {
+      const tt = document.getElementById('tooltip');
+      if (d) {
+        tt.style.display = 'block';
+        tt.querySelector('.tt-name').textContent = d.name;
+        tt.querySelector('.tt-date').textContent = formatDate(d.date) + ' · ' + d.location;
+        tt.querySelector('.tt-stats').innerHTML = `<span>${d.killed}</span> killed · <span>${d.injured}</span> injured`;
+      } else {
+        tt.style.display = 'none';
+      }
+    })
+    (document.getElementById('globe-container'));
+
+  // Track mouse for tooltip
+  document.addEventListener('mousemove', e => {
+    const tt = document.getElementById('tooltip');
+    if (tt.style.display === 'block') {
+      tt.style.left = (e.clientX + 15) + 'px';
+      tt.style.top = (e.clientY - 10) + 'px';
+    }
+  });
+
+  // Initial camera
+  globe.pointOfView({ lat: 30, lng: -40, altitude: 2.2 });
+
+  // Add arcs for US density emphasis
+  const usPoints = INCIDENTS.filter(d => d.country === 'US' && d.killed >= 5);
+  
+  // Populate stats
+  updateStats(INCIDENTS);
+  
+  // Build demographics
+  buildDemographics();
+  buildCountryList();
+  populateFilters();
+
+  // Hide loading
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('fade');
+    setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+  }, 1500);
+}
+
+// ========== STATS ==========
+function updateStats(data) {
+  const killed = data.reduce((s, d) => s + (d.killed || 0), 0);
+  const injured = data.reduce((s, d) => s + (d.injured || 0), 0);
+  const countries = new Set(data.map(d => d.country)).size;
+  
+  animateNumber('total-incidents', data.length);
+  animateNumber('total-killed', killed);
+  animateNumber('total-injured', injured);
+  animateNumber('total-countries', countries);
+}
+
+function animateNumber(id, target) {
+  const el = document.getElementById(id);
+  const duration = 1000;
+  const start = parseInt(el.textContent) || 0;
+  const startTime = performance.now();
+  
+  function tick(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(start + (target - start) * ease).toLocaleString();
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ========== DEMOGRAPHICS ==========
+function buildDemographics() {
+  const usData = INCIDENTS.filter(d => d.country === 'US' && d.perp);
+  
+  // Gender
+  const genders = {};
+  usData.forEach(d => {
+    const g = d.perp.gender || 'Unknown';
+    genders[g] = (genders[g] || 0) + 1;
+  });
+  const total = Object.values(genders).reduce((a,b) => a+b, 0);
+  const malePct = ((genders['Male'] || 0) / total * 100).toFixed(1);
+  const femalePct = ((genders['Female'] || 0) / total * 100).toFixed(1);
+  document.getElementById('male-pct').textContent = malePct + '%';
+  document.getElementById('female-pct').textContent = femalePct + '%';
+  
+  // Trans vs Cis comparison
+  const transContainer = document.getElementById('trans-comparison');
+  const usPerps = usData.length;
+  const transCount = usData.filter(d => d.perp.cisTrans === 'Transgender').length;
+  const cisCount = usPerps - transCount;
+  const transPctShooters = (transCount / usPerps * 100).toFixed(1);
+  const cisPctShooters = (cisCount / usPerps * 100).toFixed(1);
+  const transPctPop = US_POPULATION.byTransStatus['Transgender'].pct;
+  const cisPctPop = US_POPULATION.byTransStatus['Cisgender'].pct;
+  
+  // Per-capita rates
+  const transRate = (transCount / US_POPULATION.byTransStatus['Transgender'].pop) * 1000000;
+  const cisRate = (cisCount / US_POPULATION.byTransStatus['Cisgender'].pop) * 1000000;
+  const cisToTransRatio = cisRate / (transRate || 0.001);
+  
+  transContainer.innerHTML = `
+    <div class="callout" style="border-left-color:#ff2d2d;margin-bottom:16px">
+      <span class="big-num">${cisCount} vs ${transCount}</span>
+      <strong>Cisgender vs transgender perpetrators</strong> in this dataset of US school shootings.
+      Trans people are <strong>${transPctPop}%</strong> of the population but <strong>${transPctShooters}%</strong> of school shooters.
+    </div>
+    <div class="demo-bar-row">
+      <div class="demo-bar-label">
+        <span class="name">Cisgender</span>
+        <span class="value">${cisPctShooters}% of shooters · ${cisPctPop}% of population</span>
+      </div>
+      <div class="demo-bar"><div class="demo-bar-fill" style="width:100%;background:#ff2d2d"></div></div>
+    </div>
+    <div class="demo-bar-row">
+      <div class="demo-bar-label">
+        <span class="name">Transgender</span>
+        <span class="value">${transPctShooters}% of shooters · ${transPctPop}% of population</span>
+      </div>
+      <div class="demo-bar"><div class="demo-bar-fill" style="width:${transCount/cisCount*100}%;background:#00ccff"></div></div>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      Despite making up <strong>${transPctPop}%</strong> of the population, trans people commit <strong>${transPctShooters}%</strong> of school shootings. 
+      Cisgender people commit school shootings at <span class="big-num">${cisToTransRatio.toFixed(0)}×</span> the per-capita rate of transgender people.
+      <br><br><em style="color:#666;font-size:11px">Sources: Gun Violence Archive (2018-2023: 2,826 cis vs 3 trans mass shootings); Pew Research (trans population ~1.6%)</em>
+    </div>
+  `;
+
+  // Race bars
+  const races = {};
+  usData.forEach(d => {
+    const r = d.perp.race || 'Unknown';
+    if (r) races[r] = (races[r] || 0) + 1;
+  });
+  
+  const raceContainer = document.getElementById('race-bars');
+  const raceColors = {
+    'White': '#ff2d2d',
+    'Black': '#ff6b35',
+    'Latino': '#ffaa00',
+    'Asian': '#00ccff',
+    'Native American': '#33ff99',
+    'Mixed': '#cc66ff',
+    'Unknown': '#555'
+  };
+  
+  // Sort by count
+  const sortedRaces = Object.entries(races).sort((a,b) => b[1] - a[1]);
+  const maxRace = sortedRaces[0]?.[1] || 1;
+  
+  sortedRaces.forEach(([race, count]) => {
+    const shooterPct = (count / total * 100).toFixed(1);
+    const popPct = US_POPULATION.byRace[race]?.pct || '?';
+    const color = raceColors[race] || '#888';
+    
+    const row = document.createElement('div');
+    row.className = 'demo-bar-row';
+    row.innerHTML = `
+      <div class="demo-bar-label">
+        <span class="name">${race}</span>
+        <span class="value">${shooterPct}% of shooters · ${popPct}% of population</span>
+      </div>
+      <div class="demo-bar" style="display:flex;gap:2px">
+        <div class="demo-bar-fill" style="width:${count/maxRace*100}%;background:${color}" title="Shooter %"></div>
+      </div>
+    `;
+    raceContainer.appendChild(row);
+  });
+  
+  // Per-capita callouts
+  const pcContainer = document.getElementById('percapita-callouts');
+  const perCapita = {};
+  
+  sortedRaces.forEach(([race, count]) => {
+    const pop = US_POPULATION.byRace[race]?.pop;
+    if (pop) {
+      perCapita[race] = (count / pop) * 1000000; // per million
+    }
+  });
+  
+  // Find reference rate (White)
+  const whiteRate = perCapita['White'];
+  
+  if (whiteRate) {
+    Object.entries(perCapita).sort((a,b) => b[1] - a[1]).forEach(([race, rate]) => {
+      if (race === 'White') {
+        const callout = document.createElement('div');
+        callout.className = 'callout';
+        callout.innerHTML = `<strong>White Americans</strong> commit school shootings at a rate of <strong>${rate.toFixed(2)} per million people</strong>. They represent ${US_POPULATION.byRace['White'].pct}% of the population but ${((races['White']||0)/total*100).toFixed(1)}% of school shooters in this dataset.`;
+        pcContainer.appendChild(callout);
+      } else {
+        const ratio = whiteRate / rate;
+        if (ratio > 1 && isFinite(ratio)) {
+          const callout = document.createElement('div');
+          callout.className = 'callout';
+          callout.innerHTML = `A <strong>White American</strong> in this dataset commits school shootings at <span class="big-num">${ratio.toFixed(1)}×</span> the per-capita rate of <strong>${race} Americans</strong>.`;
+          pcContainer.appendChild(callout);
+        }
+      }
+    });
+  }
+  
+  // Age distribution
+  const ages = { '10-14': 0, '15-17': 0, '18-21': 0, '22-29': 0, '30-39': 0, '40+': 0 };
+  usData.forEach(d => {
+    const a = parseInt(d.perp.age);
+    if (isNaN(a)) return;
+    if (a <= 14) ages['10-14']++;
+    else if (a <= 17) ages['15-17']++;
+    else if (a <= 21) ages['18-21']++;
+    else if (a <= 29) ages['22-29']++;
+    else if (a <= 39) ages['30-39']++;
+    else ages['40+']++;
+  });
+  
+  const ageContainer = document.getElementById('age-bars');
+  const maxAge = Math.max(...Object.values(ages));
+  Object.entries(ages).forEach(([range, count]) => {
+    const row = document.createElement('div');
+    row.className = 'demo-bar-row';
+    row.innerHTML = `
+      <div class="demo-bar-label">
+        <span class="name">${range} years</span>
+        <span class="value">${count} (${(count/total*100).toFixed(0)}%)</span>
+      </div>
+      <div class="demo-bar">
+        <div class="demo-bar-fill" style="width:${count/maxAge*100}%;background:#ff5555"></div>
+      </div>
+    `;
+    ageContainer.appendChild(row);
+  });
+}
+
+function buildCountryList() {
+  const container = document.getElementById('country-list');
+  const sorted = Object.entries(COUNTRY_COUNTS)
+    .sort((a,b) => b[1].shootings - a[1].shootings);
+  
+  const flags = {
+    'US':'🇺🇸','Mexico':'🇲🇽','South Africa':'🇿🇦','India':'🇮🇳','Nigeria':'🇳🇬',
+    'Pakistan':'🇵🇰','Brazil':'🇧🇷','Canada':'🇨🇦','France':'🇫🇷','Germany':'🇩🇪',
+    'Russia':'🇷🇺','Finland':'🇫🇮','UK':'🇬🇧','Norway':'🇳🇴','Kenya':'🇰🇪',
+    'Thailand':'🇹🇭','Serbia':'🇷🇸','Czech Republic':'🇨🇿','Argentina':'🇦🇷',
+    'Azerbaijan':'🇦🇿','China':'🇨🇳','Egypt':'🇪🇬'
+  };
+  
+  sorted.forEach(([code, data]) => {
+    const rate = (data.shootings / data.population * 10000000).toFixed(2);
+    const row = document.createElement('div');
+    row.className = 'country-row';
+    row.innerHTML = `
+      <div class="flag">${flags[code]||'🏳️'}</div>
+      <div class="cname">${data.label}</div>
+      <div class="ccount">${data.shootings}</div>
+      <div class="crate">${rate}/10M</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// ========== INCIDENT DETAIL ==========
+function showIncident(d) {
+  selectedIncident = d;
+  
+  // Fly to location
+  globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 0.8 }, 1500);
+  
+  // Build detail
+  const detail = document.getElementById('incident-detail');
+  detail.innerHTML = `
+    <div class="incident-title">${d.name}</div>
+    <div class="incident-meta">${formatDate(d.date)} · ${d.location} · ${d.country}</div>
+    <div class="incident-stats">
+      <div class="incident-stat"><div class="num">${d.killed}</div><div class="lbl">Killed</div></div>
+      <div class="incident-stat"><div class="num">${d.injured}</div><div class="lbl">Injured</div></div>
+    </div>
+    ${d.perp ? `
+    <div class="demo-section">
+      <h3>Perpetrator</h3>
+      <div style="font-size:13px;line-height:2;color:#ccc">
+        ${d.perp.name ? `<strong>Name:</strong> ${d.perp.name}<br>` : ''}
+        ${d.perp.age ? `<strong>Age:</strong> ${d.perp.age}<br>` : ''}
+        ${d.perp.gender ? `<strong>Gender:</strong> ${d.perp.gender}<br>` : ''}
+        ${d.perp.race ? `<strong>Race:</strong> ${d.perp.race}<br>` : ''}
+        ${d.perp.religion ? `<strong>Religion:</strong> ${d.perp.religion}<br>` : ''}
+      </div>
+    </div>` : ''}
+    ${d.note ? `<div class="callout">${d.note}</div>` : ''}
+  `;
+  
+  // Switch to incident tab and open panel
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-tab="incident"]').classList.add('active');
+  document.getElementById('tab-incident').classList.add('active');
+  
+  if (!document.getElementById('panel').classList.contains('open')) {
+    togglePanel();
+  }
+}
+
+// ========== FILTERS ==========
+function populateFilters() {
+  const countries = [...new Set(INCIDENTS.map(d => d.country))].sort();
+  const races = [...new Set(INCIDENTS.filter(d=>d.perp?.race).map(d => d.perp.race))].sort();
+  const types = [...new Set(INCIDENTS.map(d => d.type))].sort();
+  
+  const cs = document.getElementById('filter-country');
+  countries.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; cs.appendChild(o); });
+  
+  const rs = document.getElementById('filter-race');
+  races.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; rs.appendChild(o); });
+  
+  const ts = document.getElementById('filter-type');
+  types.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; ts.appendChild(o); });
+}
+
+function applyFilters() {
+  const country = document.getElementById('filter-country').value;
+  const race = document.getElementById('filter-race').value;
+  const gender = document.getElementById('filter-gender').value;
+  const yearFrom = parseInt(document.getElementById('filter-year-from').value) || 0;
+  const yearTo = parseInt(document.getElementById('filter-year-to').value) || 9999;
+  const type = document.getElementById('filter-type').value;
+  
+  filteredData = INCIDENTS.filter(d => {
+    const year = parseInt(d.date.substring(0,4));
+    if (country && d.country !== country) return false;
+    if (race && d.perp?.race !== race) return false;
+    if (gender && d.perp?.gender !== gender) return false;
+    if (year < yearFrom || year > yearTo) return false;
+    if (type && d.type !== type) return false;
+    return true;
+  });
+  
+  globe.pointsData(filteredData);
+  updateStats(filteredData);
+  document.getElementById('filtered-count').textContent = filteredData.length;
+}
+
+// ========== UI HELPERS ==========
+function togglePanel() {
+  const panel = document.getElementById('panel');
+  const btn = document.getElementById('panel-toggle');
+  panel.classList.toggle('open');
+  btn.classList.toggle('hidden');
+}
+
+function switchTab(el) {
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + el.dataset.tab).classList.add('active');
+}
+
+function toggleMethodology() {
+  const el = document.getElementById('methodology-content');
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+}
+
+// ========== START ==========
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
